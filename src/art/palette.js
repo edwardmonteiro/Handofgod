@@ -1,5 +1,22 @@
-// Hand of God palette: "dusk over an ancient sea".
-// Every colour in the game comes from here. See docs/design/art-bible.md.
+// Hand of God palette. Every colour in the game comes from here. See docs/design/art-bible.md.
+//
+// Art bible v2 (noir, D-12): monochrome only. NOIR and grey() are the Run 02 palette.
+// PALETTE / terrainColor below are the legacy v1 colours, kept until the island renderer is removed.
+
+/** Contrast ladder from the art bible (0 = void black, 1 = divine white). */
+export const NOIR = {
+  void: 0.02,
+  shadow: 0.08,
+  mid: 0.32,
+  lit: 0.72,
+  divine: 0.97,
+};
+
+/** A CSS grey for level v (0..1), with optional alpha. The only way stage art makes colours. */
+export function grey(v, a = 1) {
+  const c = Math.round(Math.max(0, Math.min(1, v)) * 255);
+  return a >= 1 ? `rgb(${c},${c},${c})` : `rgba(${c},${c},${c},${a})`;
+}
 
 export const PALETTE = {
   void: '#0b1020',

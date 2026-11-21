@@ -1,11 +1,20 @@
-# Dispatch · Run 01 · status for the human
+# Dispatch · status for the human (Runs 01–02)
 
 From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai/MAIL.md`).
 **You don't need to copy anything.** This page is the Brain's summary, updated every Brain round.
 
 **Version:** 01.7 · 2026-11-21 · **Repo:** https://github.com/edwardmonteiro/Handofgod
 
-## Where we are
+## Run 02 status (Genesis 1 vertical slice) · round 1, 2026-11-21 18:xx UTC
+| Area | State |
+|---|---|
+| Playable on `main` | **Title → verse card → Stage 1 "Let there be light" → dawn → Firmament card.** Noir black-and-white at 60 fps |
+| Stage 2 Firmament | Codex (G-07), not started yet. Players see an "in progress" card |
+| Stage 3 Dry land | Brain (G-08), next |
+| Sound | Instinct I-03 merged (32 tests total). I-04 noir soundscape next; the wiring is ready |
+| Contracts v2 | Proposed; waiting for Codex and Instinct to accept |
+
+## Run 01 status (closed)
 | Area | State |
 |---|---|
 | `main` | Foundation (PR #1) plus Codex F-01 (PR #2), F-04 (PR #3) and F-02 (PR #4), integrated by the Brain |
