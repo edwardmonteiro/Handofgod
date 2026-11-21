@@ -1,54 +1,102 @@
-// Brain lane: wires engine, gameplay, art and audio together.
-// Keep this file thin. Logic belongs in the lanes, not here.
+// Brain lane: the stage sequencer (B-12, contracts v2). It wires engine, gameplay, art and audio together.
+// Flow: title card -> (verse card -> stage -> resolution) for each stage in order -> end card.
+// Keep this file thin. Logic belongs in the stage modules, drawing in src/art, sound in src/audio.
 
 import { createLoop } from './engine/loop.js';
 import { createInput } from './engine/input.js';
-import { createRng, hashSeed } from './engine/rng.js';
-import { createWorld, generateIsland, applyBrush, landRatio } from './gameplay/world.js';
-import { createRenderer } from './art/renderer.js';
+import { hashSeed } from './engine/rng.js';
+import { createPost } from './art/post.js';
+import { drawCard } from './art/cards.js';
+import { grey, NOIR } from './art/palette.js';
 import { createAudio } from './audio/audio.js';
+import { TITLE, CARDS, END, MISSING } from './content/genesis1.js';
 
 // ---- Tuning ----------------------------------------------------------------
-const WORLD_W = 192;
-const WORLD_H = 120;
-const BRUSH_MIN = 2;
-const BRUSH_MAX = 16;
-const BRUSH_START = 6;
-const SHAPE_RATE = 0.9;        // elevation change per second at the brush centre
-const AMBIENCE_EVERY_S = 0.5;  // how often sound re-reads the world state
+const STAGE_IDS = ['light', 'firmament', 'land'];  // Genesis 1 vertical slice, in narrative order
+const CARD_MIN_S = 2.5;     // a verse card can be skipped after this long
+const CARD_AUTO_S = 9;      // ...and advances by itself after this long
+const RESOLVE_HOLD_S = 3.5; // time on a completed stage before moving on
+const FADE_S = 0.8;
 
 const params = new URLSearchParams(location.search);
-const seed = params.has('seed') ? hashSeed(params.get('seed')) : hashSeed('run-01');
+const seed = params.has('seed') ? hashSeed(params.get('seed')) : hashSeed('genesis-1');
 
 const canvas = document.getElementById('game');
-const world = generateIsland(createWorld(WORLD_W, WORLD_H, seed));
-const rng = createRng(seed ^ 0x9e3779b9);
+const ctx = canvas.getContext('2d');
 const input = createInput(canvas);
-const renderer = createRenderer(canvas, world);
+const post = createPost();
 const audio = createAudio();
+const view = { w: 1, h: 1, dpr: 1 };
 
-const hand = { x: WORLD_W / 2, y: WORLD_H / 2, radius: BRUSH_START, mode: 'idle' };
-let followersApi = null; // set when Codex's followers.js exists (task F-04)
-let followers = null;
+/** Loads a stage's logic and art. Missing modules are expected while the team builds them. */
+async function loadStage(id) {
+  const [logic, art] = await Promise.all([
+    import(`./gameplay/stages/${id}.js`).catch((err) => report(id, 'logic', err)),
+    import(`./art/stages/${id}.js`).catch((err) => report(id, 'art', err)),
+  ]);
+  return logic ? { id, logic, art } : { id, missing: true };
+}
+function report(id, part, err) {
+  const missing = /Failed to fetch dynamically imported module|Cannot find module|404|Importing a module script failed/i.test(String(err && err.message));
+  if (missing) console.info(`[hand-of-god] stage "${id}" ${part} not built yet.`);
+  else console.error(`[hand-of-god] stage "${id}" ${part} failed to load:`, err);
+  return null;
+}
+
+// ---- Sequencer state -------------------------------------------------------------
+const stages = STAGE_IDS.map((id) => ({ id, loading: loadStage(id), mod: null }));
+let mode = 'title';     // 'title' | 'card' | 'play' | 'end'
+let index = -1;
+let modeTime = 0;
+let state = null;       // current stage state
+let resolvedFor = 0;
 let showStats = false;
-let ambienceTimer = 0;
 let time = 0;
 
-// Optional lane: load followers if the module has landed. Until then the game runs without them.
-import('./gameplay/followers.js')
-  .then((mod) => {
-    followersApi = mod;
-    followers = mod.createFollowers(world, rng);
-  })
-  .catch((err) => {
-    // Only a missing module is expected; anything else is a real fault (F-05 finding #5).
-    const missing = /Failed to fetch dynamically imported module|Cannot find module|404/i.test(String(err && err.message));
-    if (missing) console.info('[hand-of-god] followers.js not present, running without followers.');
-    else console.error('[hand-of-god] followers failed to start:', err);
-  });
+function scene(id) {
+  if (typeof audio.scene === 'function') audio.scene(id);
+}
 
-renderer.resize();
-window.addEventListener('resize', () => renderer.resize());
+let advancing = false;
+async function next() {
+  // Guard: loading is async; don't let the loop call next() again or render a stage that isn't ready.
+  if (advancing) return;
+  advancing = true;
+  const target = index + 1;
+  if (target < stages.length) {
+    const s = stages[target];
+    s.mod = s.mod || (await s.loading);
+  }
+  index = target;
+  modeTime = 0;
+  mode = index >= stages.length ? 'end' : 'card';
+  scene('card');
+  advancing = false;
+}
+
+function startStage() {
+  const s = stages[index];
+  modeTime = 0;
+  if (s.mod.missing) {
+    next();
+    return;
+  }
+  state = s.mod.logic.createStage((seed + index * 7919) >>> 0);
+  resolvedFor = 0;
+  mode = 'play';
+  scene(s.id);
+}
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  view.dpr = dpr;
+  canvas.width = Math.floor(canvas.clientWidth * dpr);
+  canvas.height = Math.floor(canvas.clientHeight * dpr);
+  view.w = canvas.width;
+  view.h = canvas.height;
+}
+resize();
+window.addEventListener('resize', resize);
 const unlock = () => audio.unlock();
 canvas.addEventListener('pointerdown', unlock);
 window.addEventListener('keydown', unlock);
@@ -56,62 +104,92 @@ window.addEventListener('keydown', unlock);
 const loop = createLoop({
   update(dt) {
     time += dt;
+    modeTime += dt;
     if (input.pressed('KeyM')) audio.toggleMute();
     if (input.pressed('Backquote') || input.pressed('F3')) showStats = !showStats;
-    if (input.pressed('KeyR')) {
-      world.seed = Math.floor(rng() * 4294967296) >>> 0;
-      generateIsland(world);
-      if (followersApi) followers = followersApi.createFollowers(world, rng);
-    }
+    const tap = input.consumeTap() || input.pressed('Space') || input.pressed('Enter');
+    const skip = input.pressed('KeyN'); // developer shortcut: skip to the next stage
 
-    const wheel = input.consumeWheel();
-    if (wheel) hand.radius = Math.min(BRUSH_MAX, Math.max(BRUSH_MIN, hand.radius - wheel));
-    if (input.pressed('BracketLeft')) hand.radius = Math.max(BRUSH_MIN, hand.radius - 1);
-    if (input.pressed('BracketRight')) hand.radius = Math.min(BRUSH_MAX, hand.radius + 1);
-
-    const p = renderer.screenToWorld(input.x, input.y);
-    hand.x = p.x;
-    hand.y = p.y;
-    const dir = input.secondary ? -1 : input.primary ? 1 : 0;
-    hand.mode = dir > 0 ? 'raise' : dir < 0 ? 'lower' : 'idle';
-    if (dir !== 0 && input.inside) {
-      const changed = applyBrush(world, hand.x, hand.y, hand.radius, dir * SHAPE_RATE * dt);
-      audio.shape(changed > 0 ? dir : 0, hand.radius / BRUSH_MAX);
-    } else {
-      audio.shape(0, 0);
-    }
-
-    if (followersApi && followers) {
-      followersApi.stepFollowers(followers, world, rng, dt);
-      // B-07: route follower events to Instinct's optional cue (contracts v1.1, D-07).
-      if (followers.events.length && typeof audio.followerCue === 'function') {
-        for (const e of followers.events) audio.followerCue(e.type, (e.x / (WORLD_W - 1)) * 2 - 1);
+    if (mode === 'title') {
+      if (tap && modeTime > 0.6) next();
+    } else if (mode === 'card') {
+      if ((tap && modeTime > CARD_MIN_S) || modeTime > CARD_AUTO_S) startStage();
+    } else if (mode === 'play') {
+      const s = stages[index];
+      const intent = input.readIntent();
+      s.mod.logic.stepStage(state, intent, dt);
+      if (state.events.length && typeof audio.stageEvent === 'function') {
+        for (const e of state.events) audio.stageEvent(e.type, e.x * 2 - 1, e.strength);
       }
-    }
-
-    ambienceTimer += dt;
-    if (ambienceTimer >= AMBIENCE_EVERY_S) {
-      ambienceTimer = 0;
-      audio.ambience(landRatio(world));
+      if (state.complete) resolvedFor += dt;
+      if (resolvedFor > RESOLVE_HOLD_S || skip) next();
+    } else if (mode === 'end') {
+      if (tap && modeTime > 3) {
+        index = -1;
+        mode = 'title';
+        modeTime = 0;
+      }
     }
   },
   render() {
-    const s = loop.stats;
-    renderer.render({
-      time,
-      hand: input.inside ? hand : null,
-      followers,
-      hud: {
-        belief: followers ? followers.belief : undefined,
-        power: hand.mode === 'lower' ? 'Lower land' : 'Raise land',
-        fps: showStats
-          ? `${s.fps.toFixed(0)} fps · ${s.frameMs.toFixed(1)} ms (sim ${s.updateMs.toFixed(1)} / draw ${s.renderMs.toFixed(1)})`
-          : undefined,
-      },
-    });
+    const card = currentCard();
+    if (card) {
+      drawCard(ctx, view, card);
+    } else if (mode === 'play') {
+      const s = stages[index];
+      if (s.mod.art) s.mod.art.drawStage(ctx, state, view, time);
+      else drawFallback(state);
+      const fadeIn = Math.min(1, modeTime / FADE_S);
+      const fadeOut = state.complete ? Math.max(0, (resolvedFor - (RESOLVE_HOLD_S - FADE_S)) / FADE_S) : 0;
+      const black = Math.max(1 - fadeIn, fadeOut);
+      if (black > 0) {
+        ctx.fillStyle = grey(0, black);
+        ctx.fillRect(0, 0, view.w, view.h);
+      }
+    }
+    post.apply(ctx, view, time);
+    if (showStats) drawStats();
   },
 });
 
+function currentCard() {
+  const t = modeTime;
+  if (mode === 'title') return { ...TITLE, t };
+  if (mode === 'end') return { ...END, t };
+  if (mode === 'card') {
+    const s = stages[index];
+    const base = s.mod && s.mod.missing ? MISSING(s.id) : CARDS[s.id];
+    return { ...base, t, out: Math.max(0, (t - (CARD_AUTO_S - FADE_S)) / FADE_S) };
+  }
+  return null;
+}
+
+/** Used when a stage's logic exists but its renderer hasn't landed yet. */
+function drawFallback(st) {
+  ctx.fillStyle = grey(NOIR.void);
+  ctx.fillRect(0, 0, view.w, view.h);
+  ctx.fillStyle = grey(NOIR.lit, 0.6);
+  ctx.fillRect(view.w * 0.3, view.h * 0.5, view.w * 0.4 * (st.progress || 0), Math.max(2, view.dpr * 2));
+}
+
+function drawStats() {
+  const s = loop.stats;
+  ctx.font = `${12 * view.dpr}px monospace`;
+  ctx.fillStyle = grey(NOIR.lit, 0.8);
+  ctx.textAlign = 'left';
+  ctx.fillText(
+    `${s.fps.toFixed(0)} fps · ${s.frameMs.toFixed(1)} ms (sim ${s.updateMs.toFixed(1)} / draw ${s.renderMs.toFixed(1)}) · ${mode}${index >= 0 && stages[index] ? ':' + stages[index].id : ''}`,
+    10 * view.dpr,
+    18 * view.dpr,
+  );
+}
+
 loop.start();
 // Exposed for debugging and automated smoke tests. Not part of the game API.
-window.__handOfGod = { world, hand, loop, audio, get followers() { return followers; } };
+window.__handOfGod = {
+  loop,
+  audio,
+  get mode() { return mode; },
+  get stage() { return index >= 0 && stages[index] ? stages[index].id : null; },
+  get state() { return state; },
+};
