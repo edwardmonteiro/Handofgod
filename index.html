@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Hand of God</title>
+  <link rel="icon" href="data:,">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0b1020; overflow: hidden; }
+    #game { display: block; width: 100vw; height: 100vh; cursor: none; touch-action: none; }
+    #help {
+      position: fixed; right: 12px; bottom: 12px; margin: 0; padding: 10px 14px;
+      font: 13px/1.5 Georgia, 'Times New Roman', serif; color: #f3e9d2;
+      background: rgba(11, 16, 32, 0.72); border-radius: 6px; pointer-events: none;
+    }
+    @media (max-width: 600px) { #help { font-size: 11px; left: 12px; right: auto; } }
+  </style>
+</head>
+<body>
+  <canvas id="game" aria-label="Hand of God: shape the island"></canvas>
+  <p id="help">
+    Left click: raise land · Right click or Shift+click: lower<br>
+    Wheel or [ ]: brush size · R: new island · M: mute · `: stats
+  </p>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
