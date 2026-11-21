@@ -1,4 +1,4 @@
-# Run 01 — Foundation
+# Run 01 — Foundation · **CLOSED 2026-11-21** (retro at the end of `log.md`)
 
 **Opened:** 2026-11-21 · **Brain:** Claude Code · **Agents:** Claude Code, OpenAI Codex, Instinct (sound, since Dispatch 01.2)
 

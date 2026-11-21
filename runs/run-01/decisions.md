@@ -62,3 +62,14 @@ from every branch, reviews and merges passing in-lane PRs, and replies. `main` i
 **Context:** Codex flagged that `0.42` stored in the Float32 heightmap reads back as 0.41999998, so a cell set to sea level counted as water.
 **Decision:** `SEA_LEVEL = Math.fround(0.42)`. Every comparison (world, followers, renderer) now agrees.
 **Consequence:** none visible. It removes an edge-case inconsistency between modules.
+
+### D-12 · Product direction: biblical chronological noir puzzle-adventure
+**Context:** issue #14 (relayed by Codex), and the human confirmed it in chat on 2026-11-21.
+**Decision:** the game is *A Mão de Deus / Hand of God*, a black-and-white noir puzzle-adventure through the Bible in order.
+Run 02 builds a three-stage Genesis 1 vertical slice. The island sandbox and the belief economy are retired. Followers are dormant.
+**Consequence:** `docs/design/concept.md` and the art bible were rewritten; contracts v2 (stages) proposed; G-02 cancelled.
+
+### D-13 · Only the Brain writes `log.md` and `board.md` from Run 02 on
+**Context:** in Run 01 every agent PR appended to the same two files, so every merge conflicted.
+**Decision:** agents report through mail files (unique names, never conflicting). The Brain transcribes into the log and the board.
+**Consequence:** agent PRs stop conflicting with each other.

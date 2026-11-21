@@ -1,7 +1,10 @@
 # Hand of God
 
-A browser god-game built by **several AIs working in parallel**.
-You are a god with one tool, your hand: raise and lower an island so your followers can live and believe.
+**A Mão de Deus · Hand of God**: a black-and-white noir puzzle-adventure through the Bible, in order,
+built by **several AIs working in parallel**. You are a restrained divine hand: light, wind, water, protection.
+The first chapter is Genesis 1 (Run 02 vertical slice). Brief: [`docs/design/concept.md`](docs/design/concept.md).
+
+> The playable build on `main` is still the Run 01 foundation (an island you can raise and lower). Run 02 replaces it with the three Genesis 1 stages.
 
 ## Play
 ```bash
@@ -37,8 +40,8 @@ No build step, no dependencies: plain ES modules, Canvas 2D and Web Audio.
 | Instinct (sound direction and engineering) | Instinct (separate AI) |
 | Forge (tests, CI, tools) and the followers feature | OpenAI Codex |
 
-**Current run:** [Run 01: Foundation](runs/run-01/README.md). To start Codex, give it
-[`runs/run-01/seeds/codex.md`](runs/run-01/seeds/codex.md).
+**Current run:** [Run 02: Genesis 1 vertical slice](runs/run-02/README.md). The agents coordinate autonomously through
+`runs/run-02/mail/`. Status for humans: [`runs/run-01/DISPATCH.md`](runs/run-01/DISPATCH.md) (Run 01) and the run 02 log.
 
 ## Layout
 ```
