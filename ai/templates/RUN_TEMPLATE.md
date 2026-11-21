@@ -4,8 +4,10 @@
 2. Create these files from the skeletons below.
 3. Carry over unfinished tasks from the previous board, keeping their IDs.
 4. Write one seed per agent (use `SEED_TEMPLATE.md`).
-5. `printf 'run-NN\n' > runs/CURRENT`
-6. Add a log entry in the new run's log saying the run is open.
+5. Write `DISPATCH.md`: one message block per AI, each starting with
+   `PROJECT: Hand of God / RUN: NN / DISPATCH NN.x / FROM: <Brain> / TO: <AI>`. Send it to the human.
+6. `printf 'run-NN\n' > runs/CURRENT`
+7. Add a log entry in the new run's log saying the run is open.
 
 ---
 

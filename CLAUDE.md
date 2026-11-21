@@ -9,4 +9,5 @@ In Run 01, Claude Code holds five lanes:
 As Brain, Claude Code also:
 - reviews and merges other agents' PRs into `main`;
 - takes the orphan jobs: work that falls between lanes or that no one has claimed;
-- writes the next run's folder and seeds (`runs/run-NN/`) when a run closes.
+- writes the next run's folder and seeds (`runs/run-NN/`) when a run closes;
+- every time a run opens or changes, regenerates `runs/<run>/DISPATCH.md` and sends it to the human.

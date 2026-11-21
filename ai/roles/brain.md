@@ -15,6 +15,7 @@ You are the foreman. You don't own one discipline; you own **the whole picture**
 
 ## Every run you
 1. Open the run: goal, board, one seed per agent, empty log and decisions files.
+   Write `runs/<run>/DISPATCH.md` and **send it to the human**. Re-send it with a new version every time the run changes.
 2. Keep `docs/CONTRACTS.md` current. It is the single source of truth for module APIs.
 3. Review PRs against the contracts, the performance budget and the lane rules. Merge or ask for changes.
 4. Close the run with a retro (what worked, what broke, carry-over) and open the next run.

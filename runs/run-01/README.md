@@ -21,6 +21,8 @@ playable slice: a procedural island you can reshape with a divine hand, with liv
 - [ ] World-generation benchmark recorded against the budget (Codex, F-03).
 - [ ] The Brain merges all Run 01 PRs and writes the retro plus the Run 02 seeds (B-04, B-05).
 
+**Dispatch (messages to paste into each AI):** [`DISPATCH.md`](DISPATCH.md)
+
 ## Seeds (briefings)
 | Agent | Seed file |
 |---|---|
