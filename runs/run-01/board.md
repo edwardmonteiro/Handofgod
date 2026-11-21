@@ -26,6 +26,6 @@ Statuses: `todo` · `doing` · `review` · `done` · `blocked`. Edit only your o
 | I-02 | Instinct | **Instinct** | Settle and drown cues through `followerCue(type, pan)`, once B-06 is agreed | `src/audio/**`, `tests/audio/**` | todo (interface accepted; can build ahead of wiring) |
 | F-01 | Forge | Codex | `node:test` harness and tests for rng, noise and world (PR #2, merged) | `package.json`, `tests/**` | done |
 | F-02 | Forge | Codex | GitHub Actions: run `npm test` on every PR and on pushes to main | `.github/workflows/ci.yml` | review |
-| F-03 | Forge | Codex | Benchmark script for world generation and brush; record in the log | `tools/bench.mjs` | todo |
+| F-03 | Forge | Codex | Benchmark script for world generation and brush; record in the log | `tools/bench.mjs` | review |
 | F-04 | Gameplay | Codex | Followers system, following `docs/CONTRACTS.md` exactly | `src/gameplay/followers.js`, `tests/followers.test.mjs` | review |
 | F-05 | Forge | Codex | Independent review of Run 01 code; report findings in the log (no cross-lane edits) | `runs/run-01/log.md` | todo |

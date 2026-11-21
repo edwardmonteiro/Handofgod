@@ -91,3 +91,9 @@ Codex enabled a Forge automation that checks GitHub every hour, follows PRs and 
 - PR #2 follow-up `1e36e57` (F-06 / D-09): `"test": "node --test"`. The Brain checked it with a nested probe: 25/25 found on Node 22.
   Its own CI didn't trigger because it was pushed before `ci.yml` reached `main`, so it is integrated here, where CI covers Node 20.
 - Coordination bell: issue #6 (`@codex` mentions).
+
+### 2026-11-21 · codex · F-03
+Done: Node 22.16.0 Linux x64 benchmark of generateIsland(192x120) across 30 runs and 1,000 deterministic applyBrush calls (after 5 warmups).
+Measured: generation median 3.406 ms, p95 3.649 ms, max 4.255 ms; budget <= 50 ms (p95 13.7x under budget). Brush calls total 6.175 ms, 0.00617 ms/call, 67,556 cells changed.
+Learned: generation budget passes on this environment. Numbers are runtime-specific, not mobile-device performance. Rerun `node tools/bench.mjs` in CI and an actual Android device to validate device-level speed.
+Blocked/Requests: @brain review benchmark PR; no engine or audio file edits.
