@@ -6,7 +6,20 @@
 Hand of God is built by **several AIs working in parallel**, coordinated in **Runs**.
 A Run is one sprint with a goal, a task board, and one seed (briefing) per AI.
 
-## 0. Before you touch anything
+## 0. We work autonomously: the repo is the only channel
+
+The human no longer relays messages between AIs. **Talk through mail files in the repo** (see `ai/MAIL.md`).
+`main` is the shared truth. The Brain merges passing PRs into it on a schedule (human-approved, D-10).
+
+**Every session, start here:**
+1. `git fetch origin` and read `main`: `runs/CURRENT`, then your mail in `runs/<run>/mail/`
+   (files whose `to:` includes you or `all`).
+2. Do the work your mail and the board ask for, in your lane, on your own branch, and open a PR.
+3. Reply with a new mail file (`YYYYMMDD-HHMM-<you>-to-<them>-<slug>.md`) on any branch you push.
+   The Brain collects it, even before your PR merges.
+4. If your platform supports schedules, re-run this loop every few hours.
+
+## 0b. Before you touch anything
 
 1. Read `runs/CURRENT` to find the active run (e.g. `run-01`).
 2. Read `runs/<run>/README.md` (the goal) and **your seed** in `runs/<run>/seeds/`.

@@ -22,9 +22,8 @@ The **log** is the site diary everyone signs at the end of a shift.
 1. **Open:** the Brain creates `runs/run-NN/` with `README.md` (goal), `board.md` (tasks),
    `seeds/<agent>.md` (one briefing per agent), `log.md` and `decisions.md`.
    It then points `runs/CURRENT` at the new run.
-2. **Dispatch:** the Brain writes `DISPATCH.md` (one message per AI, with the header `PROJECT / RUN / FROM / TO`)
-   and sends it to the human, who pastes each message into the matching AI. Each time the run changes,
-   the Brain bumps the dispatch version (01.1, 01.2, …), adds a changelog line, and sends it again.
+2. **Mail (autonomous):** agents talk through files in `runs/<run>/mail/` (see `ai/MAIL.md`). The human no longer
+   relays messages. `DISPATCH.md` remains as the Brain's status summary for the human, versioned 01.1, 01.2, ….
 3. **Work:** each agent claims its tasks on the board by setting status to `doing` and works on its own branch.
 4. **Integrate:** agents open PRs. The Brain reviews them against the contracts and the budget, then merges.
 5. **Close:** the Brain writes a retro at the end of `log.md` and opens the next run.
@@ -36,7 +35,8 @@ The **log** is the site diary everyone signs at the end of a shift.
 | `README.md` | Brain | Goal, scope, and the definition of done |
 | `board.md` | Everyone (own rows only) | Tasks with ID, owner, status and files |
 | `seeds/<agent>.md` | Brain | A briefing you can paste straight into that AI |
-| `DISPATCH.md` | Brain | One ready-to-paste message per AI, sent to the human every time the run opens or changes |
+| `mail/` | Everyone, new files only | Agent-to-agent messages (see `ai/MAIL.md`) |
+| `DISPATCH.md` | Brain | Status summary for the human, updated every Brain round |
 | `log.md` | Everyone, append-only | Handoffs, blockers, requests to other lanes |
 | `decisions.md` | Everyone, append-only | Short decision records: context, decision, consequence |
 

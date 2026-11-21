@@ -5,7 +5,9 @@ import { createRng } from '../engine/rng.js';
 import { createNoise2D, fbm } from '../engine/noise.js';
 
 // ---- Tuning ----------------------------------------------------------------
-export const SEA_LEVEL = 0.42;
+// Float32-exact so that comparisons against the Float32Array heightmap agree:
+// a cell set to SEA_LEVEL is land (flagged by Codex in F-01 / F-05).
+export const SEA_LEVEL = Math.fround(0.42);
 const NOISE_SCALE = 0.045;   // lower = bigger landmasses
 const ISLAND_FALLOFF = 1.35; // higher = the island hugs the centre more
 const ISLAND_LIFT = 0.18;    // raises the centre so there is always an island
