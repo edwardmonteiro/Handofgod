@@ -12,13 +12,15 @@ import { createAudio } from './audio/audio.js';
 import { TITLE, CARDS, END, MISSING } from './content/genesis1.js';
 
 // ---- Tuning ----------------------------------------------------------------
-const STAGE_IDS = ['light', 'firmament', 'land'];  // Genesis 1 vertical slice, in narrative order
+const params = new URLSearchParams(location.search);
+// Genesis 1 vertical slice, in narrative order. ?slice=traverse plays the character-traversal prototype
+// (G-09, the direction relayed on issue #14) until the human picks a direction.
+const STAGE_IDS = params.get('slice') === 'traverse' ? ['traverse'] : ['light', 'firmament', 'land'];
 const CARD_MIN_S = 2.5;     // a verse card can be skipped after this long
 const CARD_AUTO_S = 9;      // ...and advances by itself after this long
 const RESOLVE_HOLD_S = 3.5; // time on a completed stage before moving on
 const FADE_S = 0.8;
 
-const params = new URLSearchParams(location.search);
 const seed = params.has('seed') ? hashSeed(params.get('seed')) : hashSeed('genesis-1');
 
 const canvas = document.getElementById('game');
@@ -107,7 +109,9 @@ const loop = createLoop({
     modeTime += dt;
     if (input.pressed('KeyM')) audio.toggleMute();
     if (input.pressed('Backquote') || input.pressed('F3')) showStats = !showStats;
-    const tap = input.consumeTap() || input.pressed('Space') || input.pressed('Enter');
+    // Cards advance on tap, Space or Enter. During play, keys belong to the stage (Space = jump).
+    const tapped = input.consumeTap(); // always consumed, so a tap during play doesn't leak into the next card
+    const tap = mode !== 'play' && (tapped || input.pressed('Space') || input.pressed('Enter'));
     const skip = input.pressed('KeyN'); // developer shortcut: skip to the next stage
 
     if (mode === 'title') {

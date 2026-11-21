@@ -4,7 +4,7 @@
 
 | Where | Text | Source | Licence |
 |---|---|---|---|
-| `src/content/genesis1.js` (English) | Genesis 1:3, 1:6, 1:9, 1:10 (excerpts) | World English Bible (WEB) | Public domain |
+| `src/content/genesis1.js` (English) | Genesis 1:2, 1:3, 1:6, 1:9, 1:10 (excerpts) | World English Bible (WEB) | Public domain |
 | `src/content/genesis1.js` (Portuguese) | The same verses | Original rendering by the project team (not quoted from any copyrighted Almeida/NVI edition) | Project-owned |
 
 ## Rules

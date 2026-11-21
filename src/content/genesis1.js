@@ -11,6 +11,12 @@ export const TITLE = {
 };
 
 export const CARDS = {
+  traverse: {
+    kicker: 'Genesis 1:2',
+    lines: ['Darkness was on the surface of the deep,', 'and God’s Spirit was hovering over the surface of the waters.'],
+    sub: ['Havia trevas sobre a face do abismo, e o Espírito de Deus pairava sobre as águas.'],
+    hint: '← → walk · space jump · push the stone · hold sides to walk, tap middle to jump',
+  },
   light: {
     kicker: 'Genesis 1:3',
     lines: ['God said, “Let there be light,”', 'and there was light.'],

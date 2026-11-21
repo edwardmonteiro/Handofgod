@@ -8,6 +8,7 @@
 
 export function createInput(canvas) {
   const justPressed = new Set();
+  const heldKeys = new Set();
   const pointers = new Map(); // pointerId -> { x, y, button }
   let primaryId = null;
   let lastX = 0;
@@ -15,7 +16,11 @@ export function createInput(canvas) {
   let accDx = 0;
   let accDy = 0;
   let tapped = false;
-  const intent = { x: 0.5, y: 0.5, active: false, alt: false, dx: 0, dy: 0 };
+  // moveX / jump / act: character-traversal fields (contracts v3 proposal). Stage modules ignore what they don't use.
+  const intent = { x: 0.5, y: 0.5, active: false, alt: false, dx: 0, dy: 0, moveX: 0, jump: false, act: false };
+  const JUMP_KEYS = ['Space', 'ArrowUp', 'KeyW'];
+  const ACT_KEYS = ['KeyE', 'KeyF', 'ShiftLeft', 'ShiftRight'];
+  let jumpLatch = false;
 
   const input = {
     x: 0, // canvas pixels (device-pixel scaled)
@@ -48,6 +53,17 @@ export function createInput(canvas) {
       intent.alt = input.secondary;
       intent.dx = accDx / w;
       intent.dy = accDy / h;
+      // Keyboard: arrows or A/D move; Space, W or Up jump (one-shot); E, F or Shift act (held).
+      let mx = (heldKeys.has('ArrowRight') || heldKeys.has('KeyD') ? 1 : 0) - (heldKeys.has('ArrowLeft') || heldKeys.has('KeyA') ? 1 : 0);
+      // Touch and mouse: holding the left or right third of the screen walks; a tap in the middle third jumps.
+      if (mx === 0 && input.primary) {
+        if (intent.x < 1 / 3) mx = -1;
+        else if (intent.x > 2 / 3) mx = 1;
+      }
+      intent.moveX = mx;
+      intent.jump = jumpLatch;
+      jumpLatch = false;
+      intent.act = ACT_KEYS.some((k) => heldKeys.has(k)) || input.secondary;
       accDx = 0;
       accDy = 0;
       return intent;
@@ -93,6 +109,7 @@ export function createInput(canvas) {
     try { canvas.setPointerCapture(e.pointerId); } catch { /* synthetic events may not be capturable */ }
     const alt = e.button === 2 || (e.button === 0 && e.shiftKey);
     pointers.set(e.pointerId, { x, y, button: alt ? 'alt' : 'main' });
+    if (primaryId === null && x > canvas.width / 3 && x < (canvas.width * 2) / 3) jumpLatch = true; // middle-third tap = jump
     if (primaryId === null) {
       primaryId = e.pointerId;
       lastX = input.x = x;
@@ -132,10 +149,17 @@ export function createInput(canvas) {
     { passive: false },
   );
   window.addEventListener('keydown', (e) => {
-    if (!e.repeat) justPressed.add(e.code);
+    heldKeys.add(e.code);
+    if (!e.repeat) {
+      justPressed.add(e.code);
+      if (JUMP_KEYS.includes(e.code)) jumpLatch = true;
+    }
+    if (JUMP_KEYS.includes(e.code) || e.code.startsWith('Arrow')) e.preventDefault();
   });
+  window.addEventListener('keyup', (e) => heldKeys.delete(e.code));
   window.addEventListener('blur', () => {
     pointers.clear();
+    heldKeys.clear();
     primaryId = null;
     refreshButtons();
     justPressed.clear();
