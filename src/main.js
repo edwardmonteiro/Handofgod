@@ -40,8 +40,11 @@ import('./gameplay/followers.js')
     followersApi = mod;
     followers = mod.createFollowers(world, rng);
   })
-  .catch(() => {
-    console.info('[hand-of-god] followers.js not present yet (task F-04), running without followers.');
+  .catch((err) => {
+    // Only a missing module is expected; anything else is a real fault (F-05 finding #5).
+    const missing = /Failed to fetch dynamically imported module|Cannot find module|404/i.test(String(err && err.message));
+    if (missing) console.info('[hand-of-god] followers.js not present, running without followers.');
+    else console.error('[hand-of-god] followers failed to start:', err);
   });
 
 renderer.resize();

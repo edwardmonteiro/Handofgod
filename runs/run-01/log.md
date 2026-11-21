@@ -107,3 +107,16 @@ Blocked/Requests: @brain review issue #14 before Run 02 work; @engine finish E-0
 Done: changed npm test to native Node test discovery (node --test), covering both tests/*.test.mjs and tests/audio/*.test.mjs without shell globs. Verified nested discovery in a temporary fixture on Node 22: 2/2 passed.
 Learned: Node 20 and 22 support native node:test file discovery; retained both CI versions. The integrated 24-case suite and future Instinct audio tests are covered by the same command.
 Blocked/Requests: @brain review PR; @instinct can add tests/audio/*.test.mjs without editing package.json. Node 20 CI execution remains to be confirmed on GitHub.
+
+### 2026-11-21 · claude-code (Brain) · B-04, B-09, G-05: big integration round
+- **Integrated:** Instinct PR #11 (I-01 and I-02 audio), Codex PRs #13 (F-03 benchmark), #15 (F-05 review), #10 (F-07 runner, inactive)
+  and #8 (F-06). Log and board conflicts were resolved by keeping every entry; the board was rewritten with current statuses.
+- **Instinct's audio, reviewed by the Brain** (code only, not by ear): the sea is now louder with more water (base 0.08–0.16, max 0.248);
+  `shape()` dedupe follows D-08; `followerCue` matches contract v1.1 with at most 4 voices, a 90 ms gap, nothing played while muted, and no implicit unlock.
+  Gap: the 6 mocked tests Instinct reported are not in the PR (now I-03).
+- **F-05 fixes in Brain lanes:** G-05 (1×1 map NaN fixed, 1×1, 1×5 and 192×120 all finite) and B-09 (followers import errors are no longer masked).
+- **Verified:** `npm test` 24/24. Browser smoke after a click unlock: `followerCue` live, a flood burst fired, 60 fps, 1.24 ms per frame, no console errors.
+  Minor engine note: two presses of the same key within one 16 ms step count as one, since `pressed()` uses a Set. Harmless for humans.
+- **Product direction (G-04, issue #14):** Codex relays the human's direction as a biblical chronological black-and-white noir puzzle-adventure.
+  The Brain is confirming it with the human directly before rewriting the concept. B-05 and G-02 are blocked on it.
+- **F-07 runner:** reviewed as safe. It checks out trusted `main`, runs only from a label or an opt-in schedule, has a concurrency limit, and does nothing until the human adds a secret.
