@@ -30,8 +30,9 @@ export function createWorld(w, h, seed) {
 export function generateIsland(world) {
   const { w, h, elev } = world;
   const noise = createNoise2D(createRng(world.seed));
-  const cx = (w - 1) / 2;
-  const cy = (h - 1) / 2;
+  // Max(…, 0.5) keeps degenerate 1-wide maps finite (F-05 finding #4).
+  const cx = Math.max((w - 1) / 2, 0.5);
+  const cy = Math.max((h - 1) / 2, 0.5);
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const nx = (x - cx) / cx;

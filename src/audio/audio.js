@@ -7,17 +7,26 @@ const MASTER_GAIN = 0.6;
 const SEA_GAIN = 0.16;
 const DRONE_GAIN = 0.05;
 const SHAPE_GAIN = 0.22;
+const SWELL_RATIO = 0.55; // 0.16 * 1.55 = 0.248 maximum sea gain.
+const CUE_GAP = 0.09;
+const CUE_MAX_VOICES = 4;
 const MUTE_KEY = 'handofgod.muted';
 
 export function createAudio() {
   let ctx = null;
-  let master, seaGain, seaFilter, droneGain, shapeGain, shapeFilter, shapeOsc;
+  let master, seaGain, seaFilter, seaSwellDepth, droneGain, shapeGain, shapeFilter, shapeOsc;
   let muted = readMuted();
+  let lastDirection = null, lastIntensity = null;
+  let nextCueAt = 0;
+  const cueEnds = [];
 
   function build() {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
     ctx = new AC();
+    lastDirection = lastIntensity = null;
+    nextCueAt = 0;
+    cueEnds.length = 0;
     master = ctx.createGain();
     master.gain.value = muted ? 0 : MASTER_GAIN;
     master.connect(ctx.destination);
@@ -34,9 +43,9 @@ export function createAudio() {
     seaGain.gain.value = SEA_GAIN;
     const swell = ctx.createOscillator();
     swell.frequency.value = 0.09;
-    const swellDepth = ctx.createGain();
-    swellDepth.gain.value = SEA_GAIN * 0.6;
-    swell.connect(swellDepth).connect(seaGain.gain);
+    seaSwellDepth = ctx.createGain();
+    seaSwellDepth.gain.value = SEA_GAIN * SWELL_RATIO;
+    swell.connect(seaSwellDepth).connect(seaGain.gain);
     noise.connect(seaFilter).connect(seaGain).connect(master);
 
     // Drone: two detuned low sines, a perfect fifth apart
@@ -90,8 +99,13 @@ export function createAudio() {
     /** direction: +1 raise, -1 lower, 0 stop. intensity: 0..1 */
     shape(direction, intensity) {
       if (!ctx) return;
+      direction = Number.isFinite(direction) ? Math.sign(direction) : 0;
+      intensity = direction === 0 || !Number.isFinite(intensity) ? 0 : Math.max(0, Math.min(1, intensity));
+      if (direction === lastDirection && intensity === lastIntensity) return;
+      lastDirection = direction;
+      lastIntensity = intensity;
       const t = ctx.currentTime;
-      const level = direction === 0 ? 0 : SHAPE_GAIN * Math.min(1, intensity);
+      const level = direction === 0 ? 0 : SHAPE_GAIN * intensity;
       shapeGain.gain.setTargetAtTime(level, t, direction === 0 ? 0.12 : 0.03);
       if (direction > 0) {
         shapeFilter.frequency.setTargetAtTime(180 + 260 * intensity, t, 0.2);
@@ -104,13 +118,50 @@ export function createAudio() {
     /** More land -> less sea, more drone. landRatio: 0..1 */
     ambience(landRatio) {
       if (!ctx) return;
+      landRatio = Number.isFinite(landRatio) ? Math.max(0, Math.min(1, landRatio)) : 0.5;
       const t = ctx.currentTime;
+      // Scale the swell with the base gain so its trough stays above zero.
+      const seaLevel = SEA_GAIN * (1 - 0.5 * landRatio);
+      seaGain.gain.setTargetAtTime(seaLevel, t, 1);
+      seaSwellDepth.gain.setTargetAtTime(seaLevel * SWELL_RATIO, t, 1);
       seaFilter.frequency.setTargetAtTime(380 + 500 * (1 - landRatio), t, 1);
       droneGain.gain.setTargetAtTime(DRONE_GAIN * (0.6 + landRatio), t, 1);
+    },
+    /** One transition cue; no implicit unlock, no backlog while muted/suspended. */
+    followerCue(type, pan = 0) {
+      if (!ctx || ctx.state !== 'running' || muted || (type !== 'settle' && type !== 'drown')) return;
+      const t = ctx.currentTime;
+      for (let i = cueEnds.length - 1; i >= 0; i--) if (cueEnds[i] <= t) cueEnds.splice(i, 1);
+      if (t < nextCueAt || cueEnds.length >= CUE_MAX_VOICES) return;
+      nextCueAt = t + CUE_GAP;
+      const duration = type === 'settle' ? 0.45 : 0.38;
+      cueEnds.push(t + duration + 0.02);
+      const voice = ctx.createOscillator();
+      const envelope = ctx.createGain();
+      const position = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      voice.type = type === 'settle' ? 'sine' : 'triangle';
+      const from = type === 'settle' ? 660 : 233;
+      const to = type === 'settle' ? 880 : 110;
+      voice.frequency.setValueAtTime(from, t);
+      voice.frequency.exponentialRampToValueAtTime(to, t + duration * 0.8);
+      envelope.gain.setValueAtTime(0, t);
+      envelope.gain.linearRampToValueAtTime(0.055, t + 0.012);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+      voice.connect(envelope);
+      if (position) {
+        position.pan.value = Number.isFinite(pan) ? Math.max(-1, Math.min(1, pan)) : 0;
+        envelope.connect(position).connect(master);
+      } else envelope.connect(master);
+      voice.onended = () => { voice.disconnect(); envelope.disconnect(); if (position) position.disconnect(); };
+      voice.start(t);
+      voice.stop(t + duration + 0.02);
     },
     dispose() {
       if (ctx) ctx.close();
       ctx = null;
+      lastDirection = lastIntensity = null;
+      cueEnds.length = 0;
+      nextCueAt = 0;
     },
   };
   return api;

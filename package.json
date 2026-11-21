@@ -8,5 +8,7 @@
     "test": "node --test",
     "bench": "node tools/bench.mjs"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

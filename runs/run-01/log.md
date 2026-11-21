@@ -91,3 +91,32 @@ Codex enabled a Forge automation that checks GitHub every hour, follows PRs and 
 - PR #2 follow-up `1e36e57` (F-06 / D-09): `"test": "node --test"`. The Brain checked it with a nested probe: 25/25 found on Node 22.
   Its own CI didn't trigger because it was pushed before `ci.yml` reached `main`, so it is integrated here, where CI covers Node 20.
 - Coordination bell: issue #6 (`@codex` mentions).
+
+### 2026-11-21 · codex · F-03
+Done: Node 22.16.0 Linux x64 benchmark of generateIsland(192x120) across 30 runs and 1,000 deterministic applyBrush calls (after 5 warmups).
+Measured: generation median 3.406 ms, p95 3.649 ms, max 4.255 ms; budget <= 50 ms (p95 13.7x under budget). Brush calls total 6.175 ms, 0.00617 ms/call, 67,556 cells changed.
+Learned: generation budget passes on this environment. Numbers are runtime-specific, not mobile-device performance. Rerun `node tools/bench.mjs` in CI and an actual Android device to validate device-level speed.
+Blocked/Requests: @brain review benchmark PR; no engine or audio file edits.
+
+### 2026-11-21 · codex · F-05
+Done: independently reviewed every `src/` module on `main`; eight findings with severity, lane owner and evidence in `tools/reviews/run-01-independent-review.md`. Confirmed 1×1 island NaN in Node 22 and reported product-spec mismatch in issue #14.
+Learned: `src/main.js` obscures follower import errors; touch handling needs multi-pointer state; sound sea-volume and automation changes are already assigned to Instinct.
+Blocked/Requests: @brain review issue #14 before Run 02 work; @engine finish E-02; @instinct finish I-01/I-02. No cross-lane edits made.
+
+### 2026-11-21 · codex · F-06
+Done: changed npm test to native Node test discovery (node --test), covering both tests/*.test.mjs and tests/audio/*.test.mjs without shell globs. Verified nested discovery in a temporary fixture on Node 22: 2/2 passed.
+Learned: Node 20 and 22 support native node:test file discovery; retained both CI versions. The integrated 24-case suite and future Instinct audio tests are covered by the same command.
+Blocked/Requests: @brain review PR; @instinct can add tests/audio/*.test.mjs without editing package.json. Node 20 CI execution remains to be confirmed on GitHub.
+
+### 2026-11-21 · claude-code (Brain) · B-04, B-09, G-05: big integration round
+- **Integrated:** Instinct PR #11 (I-01 and I-02 audio), Codex PRs #13 (F-03 benchmark), #15 (F-05 review), #10 (F-07 runner, inactive)
+  and #8 (F-06). Log and board conflicts were resolved by keeping every entry; the board was rewritten with current statuses.
+- **Instinct's audio, reviewed by the Brain** (code only, not by ear): the sea is now louder with more water (base 0.08–0.16, max 0.248);
+  `shape()` dedupe follows D-08; `followerCue` matches contract v1.1 with at most 4 voices, a 90 ms gap, nothing played while muted, and no implicit unlock.
+  Gap: the 6 mocked tests Instinct reported are not in the PR (now I-03).
+- **F-05 fixes in Brain lanes:** G-05 (1×1 map NaN fixed, 1×1, 1×5 and 192×120 all finite) and B-09 (followers import errors are no longer masked).
+- **Verified:** `npm test` 24/24. Browser smoke after a click unlock: `followerCue` live, a flood burst fired, 60 fps, 1.24 ms per frame, no console errors.
+  Minor engine note: two presses of the same key within one 16 ms step count as one, since `pressed()` uses a Set. Harmless for humans.
+- **Product direction (G-04, issue #14):** Codex relays the human's direction as a biblical chronological black-and-white noir puzzle-adventure.
+  The Brain is confirming it with the human directly before rewriting the concept. B-05 and G-02 are blocked on it.
+- **F-07 runner:** reviewed as safe. It checks out trusted `main`, runs only from a label or an opt-in schedule, has a concurrency limit, and does nothing until the human adds a secret.
