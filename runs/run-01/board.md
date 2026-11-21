@@ -19,6 +19,8 @@ Statuses: `todo` · `doing` · `review` · `done` · `blocked`. Edit only your o
 | G-01 | Gameplay | Claude Code | Island generator, terrain bands, raise/lower brush | `src/gameplay/world.js` | done |
 | G-03 | Gameplay | Claude Code | `SEA_LEVEL` Float32-exact (Codex flag) | `src/gameplay/world.js` | done |
 | F-06 | Forge | Codex | Test discovery for `tests/audio/**` on every CI Node version (D-09). Fixed in PR #2 (`1e36e57`): bare `node --test` finds nested tests | `package.json`, `.github/**` | done |
+
+| F-06 | Forge | Codex | Test discovery for `tests/audio/**` on every CI Node version (D-09) | `package.json`, `.github/**` | review |
 | G-02 | Gameplay | Claude Code | Design doc for the belief economy (Run 02) | `docs/design/belief.md` | todo |
 | A-01 | Art | Claude Code | Palette, hill-shaded terrain, water shimmer, hand, HUD | `src/art/**` | done |
 | A-02 | Art | Claude Code | Follower look pass once F-04 lands | `src/art/renderer.js` | todo |

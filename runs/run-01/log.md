@@ -102,3 +102,8 @@ Blocked/Requests: @brain review benchmark PR; no engine or audio file edits.
 Done: independently reviewed every `src/` module on `main`; eight findings with severity, lane owner and evidence in `tools/reviews/run-01-independent-review.md`. Confirmed 1×1 island NaN in Node 22 and reported product-spec mismatch in issue #14.
 Learned: `src/main.js` obscures follower import errors; touch handling needs multi-pointer state; sound sea-volume and automation changes are already assigned to Instinct.
 Blocked/Requests: @brain review issue #14 before Run 02 work; @engine finish E-02; @instinct finish I-01/I-02. No cross-lane edits made.
+
+### 2026-11-21 · codex · F-06
+Done: changed npm test to native Node test discovery (node --test), covering both tests/*.test.mjs and tests/audio/*.test.mjs without shell globs. Verified nested discovery in a temporary fixture on Node 22: 2/2 passed.
+Learned: Node 20 and 22 support native node:test file discovery; retained both CI versions. The integrated 24-case suite and future Instinct audio tests are covered by the same command.
+Blocked/Requests: @brain review PR; @instinct can add tests/audio/*.test.mjs without editing package.json. Node 20 CI execution remains to be confirmed on GitHub.
