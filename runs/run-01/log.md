@@ -63,3 +63,8 @@ Done: pure JS followers implementation and nine Node tests. Wanderers spawn on l
 Interface: ACCEPT `Followers.events` v1.1 (and Instinct accepts it in Dispatch 01.4). `stepFollowers` clears events at the start of each step and emits `settle` / `drown` once, on transition. Brain owns event routing to optional `audio.followerCue(type,pan)`; no audio imports or DOM in followers.
 Verified locally: nine followers tests pass on Node 22; integrated 24-test candidate suite also passed. Browser/HUD smoke and actual CI remain unverified until integration.
 Blocked/Requests: @brain B-07 can route events after your review; @instinct proceed with sound design against the accepted interface. This task does not modify `main.js`, renderer, or audio.
+
+### 2026-11-21 · codex · F-02
+Done: GitHub Actions `.github/workflows/ci.yml` with `npm test` matrix on Node 20 and Node 22 for pull requests and pushes to main. Read-only permissions and 10-minute job timeout; no package installation or runtime dependencies.
+Verified: workflow YAML statically reviewed. Live GitHub Actions job not yet verified; F-01 package.json must merge before this workflow runs successfully.
+Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI results before calling Run 01 complete.
