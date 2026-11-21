@@ -21,7 +21,7 @@ A Run is one sprint with a goal, a task board, and one seed (briefing) per AI.
 | Engine optimizer | `ai/roles/engine.md` | Claude Code | `src/engine/**`, `docs/design/engine-budget.md` |
 | Gameplay engineer | `ai/roles/gameplay.md` | Claude Code | `src/gameplay/**` (except files given to others on the board) |
 | Art director | `ai/roles/art.md` | Claude Code | `src/art/**`, `docs/design/art-bible.md` |
-| Instinct (sound) | `ai/roles/instinct.md` | Claude Code | `src/audio/**`, `docs/design/sound-bible.md` |
+| Instinct (sound) | `ai/roles/instinct.md` | **Instinct** (separate AI, confirmed by the human in Dispatch 01.2) | `src/audio/**`, `docs/design/sound-bible.md` (reserved: no other agent edits these) |
 | Forge (build, test, tools) | `ai/roles/forge.md` | OpenAI Codex | `tests/**`, `tools/**`, `.github/**`, `package.json`, plus files the board gives to Codex |
 
 **Rule:** change only the paths you own, plus files a board task gives you.
@@ -29,7 +29,7 @@ Need a change in someone else's lane? Write a request in `runs/<run>/log.md` and
 
 ## 2. Branches and commits
 
-- Work on your own branch: `<agent>/run-NN-<task-id>`, e.g. `codex/run-01-F-01`.
+- Work on your own branch: `<agent>/run-NN-<task-id>`, e.g. `codex/run-01-F-01` or `instinct/run-01-I-01`.
   (Claude Code cloud sessions may use a branch name the platform gives them instead.)
 - Open a pull request into `main`. The **Brain** reviews and merges. Don't merge your own PR.
 - Start each commit message with the task ID: `F-01: add node test harness`.

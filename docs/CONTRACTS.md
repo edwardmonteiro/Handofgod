@@ -1,5 +1,7 @@
 # Module contracts
 
+**Version:** 1.1 (2026-11-21) · see the changelog at the end.
+
 **Owner:** Brain. This is the single source of truth for every API that crosses a lane.
 If code disagrees with this file, the code is wrong. To change a contract, ask in the run log
 and tag `@brain`.
@@ -61,6 +63,21 @@ stepFollowers(followers, world, rng, dt) -> void
     // Each settled follower adds belief at BELIEF_PER_SECOND (a named constant).
     // A follower whose cell becomes water switches to 'drowning' and is removed after 2 s.
 ```
+
+#### Follower events (v1.1, status: **PROPOSED**, awaiting agreement from Instinct and Codex)
+```js
+// Followers gains one field:
+//   Followers = { list, belief, events: FollowerEvent[] }
+//   FollowerEvent = { type: 'settle' | 'drown', x: number, y: number }
+// Rules:
+//   - createFollowers returns events = [].
+//   - stepFollowers empties events (events.length = 0) at the START of each call, then pushes one
+//     event per state change during that step: 'settle' when wander -> settled,
+//     'drown' when any state -> drowning. Removing a drowned follower emits nothing.
+//   - Events are plain data: no callbacks, no Web Audio, no DOM.
+```
+The Brain reads `events` after each step and routes them (task B-07). Neither followers nor audio
+import each other.
 `src/main.js` loads this module **optionally**: until it exists, the game runs without followers.
 Once it exists, the renderer draws `list` and the HUD shows `belief`. No other wiring is needed.
 
@@ -87,3 +104,24 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
 - `Audio` is `{ unlock(), toggleMute() -> boolean, muted, shape(direction, intensity), ambience(landRatio), dispose() }`.
   `direction` is `+1` (raise) or `-1` (lower), and `intensity` runs `0..1`.
   `unlock()` must be called from a user gesture handler.
+
+#### Follower cues (v1.1, status: **PROPOSED**, awaiting agreement from Instinct)
+- `followerCue(type: 'settle' | 'drown', pan: number)`: `pan` runs `-1..1`, from the event's x position
+  across the map width.
+- Optional: the Brain calls it only if `typeof audio.followerCue === 'function'`, so the game runs before I-02 lands.
+- Instinct decides how it sounds, plus voice limiting and throttling (several events can arrive in one step).
+
+#### How `src/main.js` calls audio today (Brain-owned; any change is flagged to Instinct)
+| Call | Frequency |
+|---|---|
+| `unlock()` | on canvas `pointerdown` and on window `keydown` |
+| `toggleMute()` | `M` key |
+| `shape(dir, intensity)` | **every simulation step (60 Hz)**, including `shape(0, 0)` while idle |
+| `ambience(landRatio)` | every 0.5 s |
+
+---
+
+## Changelog
+- **1.1** (2026-11-21): proposed follower events (`Followers.events`) and `Audio.followerCue`.
+  Documented how `main.js` calls audio. Only adds fields; nothing in v1 changed.
+- **1.0** (2026-11-21): first version.

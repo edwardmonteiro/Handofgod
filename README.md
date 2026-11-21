@@ -34,7 +34,7 @@ No build step, no dependencies: plain ES modules, Canvas 2D and Web Audio.
 | Engine optimizer | Claude Code |
 | Gameplay engineer | Claude Code |
 | Art director | Claude Code |
-| Instinct (sound direction and engineering) | Claude Code |
+| Instinct (sound direction and engineering) | Instinct (separate AI) |
 | Forge (tests, CI, tools) and the followers feature | OpenAI Codex |
 
 **Current run:** [Run 01: Foundation](runs/run-01/README.md). To start Codex, give it
@@ -47,6 +47,6 @@ src/main.js           integration glue (Brain)
 src/engine/           loop, input, rng, noise (Engine)
 src/gameplay/         world, followers (Gameplay / Codex)
 src/art/              palette, renderer (Art)
-src/audio/            procedural soundscape (Instinct)
+src/audio/            procedural soundscape (Instinct, reserved)
 docs/design/          concept, art bible, sound bible, engine budget
 ```

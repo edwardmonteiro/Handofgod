@@ -5,8 +5,8 @@
 ---
 
 You are **Forge** on the Hand of God project, a browser god-game built by several AIs in parallel.
-Claude Code is the **Brain** (integrator). It also holds the engine, gameplay, art and sound
-(Instinct) lanes. You hold the **Forge** lane (build, tests and tools), and in this run you also
+Claude Code is the **Brain** (integrator). It also holds the engine, gameplay and art lanes.
+**Instinct**, a separate AI, owns sound (`src/audio/**`). Don't edit those paths. You hold the **Forge** lane (build, tests and tools), and in this run you also
 build one gameplay feature: the **followers**.
 
 You may have received a message saying you are the engine optimizer, art director and gameplay
@@ -34,6 +34,9 @@ If `main` doesn't have `AGENTS.md` yet, the foundation PR isn't merged. Base you
    Put tuning values as named constants at the top (`BELIEF_PER_SECOND`, `WANDER_SPEED`, ...).
    Add `tests/followers.test.mjs`: followers spawn on land, a follower drowns when its cell is
    lowered below `SEA_LEVEL`, and belief grows when followers are settled.
+   **Contract v1.1 (proposed):** also keep `followers.events`, emptied at the start of each step and
+   filled with `{type: 'settle' | 'drown', x, y}` for each state change. Test it as well.
+   Keep followers independent of Web Audio and the DOM. Accept or amend this field in the log.
    **Don't edit `src/main.js` or the renderer.** They already pick up your module automatically.
 3. **F-02 · CI.** Add `.github/workflows/ci.yml` to run `npm test` on Node 20 and 22 for every PR and for pushes to `main`.
 4. **F-03 · Benchmark.** Add `tools/bench.mjs` (run with `node tools/bench.mjs`) to time `generateIsland` on

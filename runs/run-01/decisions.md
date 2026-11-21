@@ -24,3 +24,16 @@
 **Context:** Run 01 started without a game spec.
 **Decision:** the Brain wrote `docs/design/concept.md` (shape an island so followers can live and believe).
 **Consequence:** the human's spec overrides it, and the gameplay lane re-plans in Run 02.
+
+### D-06 · Instinct (a separate AI) owns sound direction and engineering
+**Context:** Dispatch 01.2. The human confirmed that Instinct owns the sound lane.
+**Decision:** `src/audio/**` and `docs/design/sound-bible.md` are reserved for Instinct. Claude Code keeps
+Brain, engine, gameplay and art. Codex keeps Forge and F-04. Instinct builds on the audio Claude Code wrote at `f128a72`.
+**Consequence:** the Brain flags any change to `audio.*` calls in `main.js` to Instinct. I-01 and I-02 move to Instinct.
+
+### D-07 · Followers emit plain-data events; the Brain routes them to audio
+**Context:** follower sounds need settle and drown signals, while followers must stay free of Web Audio and the DOM.
+**Decision (proposed, contracts v1.1):** `Followers.events` is emptied at the start of each step and filled
+with `{type, x, y}`. `main.js` reads the events and calls `audio.followerCue(type, pan)` if Instinct exports it.
+**Consequence:** followers, audio and art stay decoupled. Art can use the same events later (for example a glow
+when someone settles). This becomes final once Instinct and Codex agree in the log.
