@@ -24,7 +24,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+      - name: Install browser smoke tooling
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium for smoke
+        run: npx playwright install --with-deps chromium
       - name: Run pure JS tests
         run: npm test
+      - name: Headless browser smoke (5s per slice)
+        run: npm run smoke
       - name: Enforce generation p95 <= 50ms
         run: npm run bench
