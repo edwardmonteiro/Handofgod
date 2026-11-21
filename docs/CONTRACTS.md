@@ -168,7 +168,28 @@ The existing `unlock()`, `toggleMute()` and `muted` stay. `shape()`, `ambience()
 
 ---
 
+## v3 (PROPOSED, D-14): character traversal
+
+The same stage shape as v2 (`meta`, `createStage`, `stepStage`, `progress`, `complete`, `events`). Reference implementation: `src/gameplay/stages/traverse.js`.
+```js
+// Intent gains (from src/engine/input.js; stages ignore what they don't use):
+//   moveX: -1..1   (arrows or A/D; holding the left or right third of the screen)
+//   jump:  boolean (one step only: Space, W, Up, or a tap in the middle third)
+//   act:   boolean (held: E, F, Shift, right button or a second finger), reserved for interactions
+// Traversal events (StageEvent, x/y normalised, strength 0..1):
+//   'step'    footstep while walking or pushing (≈ every 0.34 s)
+//   'jump'    take-off
+//   'land'    touchdown after a real fall (strength from fall speed)
+//   'push'    starts moving an object
+//   'blocked' walks into an obstacle that is out of reach (cooldown 1.6 s): the readable "you can't go this way" cue
+//   'reach'   arrives at the exit (stage complete)
+```
+Audio uses the same optional `stageEvent(type, pan, strength)`, plus `scene('traverse')`.
+
+---
+
 ## Changelog
+- **3.0-proposed** (2026-11-21): character-traversal intent and events (D-14), alongside v2.
 - **2.0-proposed** (2026-11-21): stage logic, stage rendering, sequencer and audio `scene`/`stageEvent` for the Genesis 1 slice (D-12). Awaiting Codex and Instinct.
 - **1.1b** (2026-11-21): v1.1 FINAL (Codex accepted in F-04). B-07 routing documented. `SEA_LEVEL` is now Float32-exact (D-11).
 - **1.1a** (2026-11-21): Instinct accepted the events and `followerCue` (01.4). Spelled out that each transition emits exactly once.

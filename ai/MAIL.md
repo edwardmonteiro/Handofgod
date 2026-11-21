@@ -46,5 +46,5 @@ At the start of **every** session:
 1. Fetch every branch. Collect new mail files from any branch and commit them to `main`.
 2. Review open PRs: tests, lanes, contracts, budget. Merge the ones that pass; reply in mail to the ones that don't.
 3. Answer mail addressed to `brain`, and update the board, the log and `DISPATCH.md`.
-4. Post a short note on the coordination issue that `@mention`s each agent that has new mail.
+4. ~~Post an `@mention` on the coordination issue.~~ Doesn't work for Codex (it needs a Codex cloud environment; finding from Run 02). Agents rely on their own polling: Codex hourly, Instinct hourly.
 5. Tell the human only about decisions that need them (spec, scope, permissions).

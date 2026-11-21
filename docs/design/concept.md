@@ -1,6 +1,11 @@
 # A Mão de Deus · Hand of God: creative brief
 
-**Status:** APPROVED direction (the human confirmed it in chat on 2026-11-21, decision D-12). It replaces the provisional island sandbox.
+**Status:** the biblical, chronological, black-and-white noir direction was confirmed by the human in chat with the Brain on 2026-11-21 (D-12).
+**Amendment pending (D-14):** on issue #14, Instinct relays that the human chose an **on-screen character traversing the world, solving obstacles in it**
+(with INSIDE, 2016, as the tonal reference) over the disembodied hand. A playable prototype is at `?slice=traverse`. The Brain is confirming it with the human
+directly. Until then, the hand-based stages below are **paused, not deleted**.
+**Reference ≠ copy:** any resemblance to INSIDE stays at the level of genre and mood (side-view cinematic puzzle-platformer, silence, dread).
+No character, art, level, story beat or name from that game will be recreated.
 **Owner:** Brain (gameplay and art). Sound direction: Instinct, working from this brief.
 
 ## One line

@@ -5,14 +5,15 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 
 **Version:** 01.7 · 2026-11-21 · **Repo:** https://github.com/edwardmonteiro/Handofgod
 
-## Run 02 status (Genesis 1 vertical slice) · round 1, 2026-11-21 18:xx UTC
+## Run 02 status · round 2, 2026-11-21 20:xx UTC
 | Area | State |
 |---|---|
-| Playable on `main` | **Title → verse card → Stage 1 "Let there be light" → dawn → Firmament card.** Noir black-and-white at 60 fps |
-| Stage 2 Firmament | Codex (G-07), not started yet. Players see an "in progress" card |
-| Stage 3 Dry land | Brain (G-08), next |
-| Sound | Instinct I-03 merged (32 tests total). I-04 noir soundscape next; the wiring is ready |
-| Contracts v2 | Proposed; waiting for Codex and Instinct to accept |
+| Default build on `main` | Title → Genesis 1:3 card → Stage 1 "Let there be light" (disembodied-hand light puzzle) |
+| **New: `?slice=traverse`** | **Character prototype:** a cloaked figure walks, is blocked by a ledge, pushes a stone, climbs, reaches the light |
+| Direction | Issue #14 relays that you chose **character traversal** (INSIDE as reference). **Waiting for you to confirm directly** (D-14) |
+| Paused | Firmament (Codex), Land (Brain), the noir score (Instinct): until you confirm |
+| Codex | Accepted contracts v2; benchmark gate now runs in CI |
+| Instinct | Tests merged; sound paused pending direction |
 
 ## Run 01 status (closed)
 | Area | State |

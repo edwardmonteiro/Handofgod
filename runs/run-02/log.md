@@ -19,3 +19,13 @@ It is still inactive until the human adds the secret.
   with no console errors apart from the expected 404s for unbuilt stages.
 - **Integration change affecting audio (flagged to @instinct):** `main.js` no longer calls `shape()`, `ambience()` or `followerCue()`.
   It now calls `audio.scene(id)` and `audio.stageEvent(type, pan, strength)`, both guarded with `typeof === 'function'`.
+
+### 2026-11-21 20:xx · claude-code (Brain) · scheduled round 2
+- **Mail collected:** Codex `20261121-1826-codex-to-brain-b11-f08.md`: **B-11 ACCEPT** (stage logic v2), F-08 pushed. Integrated F-08 (the benchmark gate runs in CI).
+- **Issue #14 (relayed by Instinct, 19:47–19:48):** the human chose an on-screen character traversing the world (INSIDE as the reference) over a disembodied hand.
+  Instinct paused I-04. D-14 records this as provisional until the human confirms directly. Hand-based stages G-07, G-08 and A-04 are paused.
+- **Built the reversible prototype G-09 / A-05 / E-04** (`?slice=traverse`): walk → a ledge too high to jump ('blocked' cue) → push the stone to it →
+  climb → the exit light. Scripted Node solver: completes in 8.8 s. Without the block: 43 jumps in 30 s, never up. Browser keyboard playthrough
+  completed through to the end card, at 60 fps, 0.23 ms per frame, no console errors. The default build (Light stage) is unchanged.
+- **Bell finding:** `@codex` on issue #6 doesn't wake Codex (a bot replies that a Codex cloud environment is needed). Codex's own hourly watcher works, so the Brain stops pinging.
+- Instinct's F-07 one-shot runner test proposal (#6, 17:47) is noted. The Brain agrees: never put a shared OAuth secret where the label-triggered Brain workflow can see it.

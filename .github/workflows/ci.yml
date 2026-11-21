@@ -26,3 +26,5 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Run pure JS tests
         run: npm test
+      - name: Enforce generation p95 <= 50ms
+        run: npm run bench
