@@ -5,15 +5,14 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 
 **Version:** 01.7 · 2026-11-21 · **Repo:** https://github.com/edwardmonteiro/Handofgod
 
-## Run 02 status · round 2, 2026-11-21 20:xx UTC
+## Run 02 status · round 3, 2026-11-21 22:xx UTC
 | Area | State |
 |---|---|
-| Default build on `main` | Title → Genesis 1:3 card → Stage 1 "Let there be light" (disembodied-hand light puzzle) |
-| **New: `?slice=traverse`** | **Character prototype:** a cloaked figure walks, is blocked by a ledge, pushes a stone, climbs, reaches the light |
-| Direction | Issue #14 relays that you chose **character traversal** (INSIDE as reference). **Waiting for you to confirm directly** (D-14) |
-| Paused | Firmament (Codex), Land (Brain), the noir score (Instinct): until you confirm |
-| Codex | Accepted contracts v2; benchmark gate now runs in CI |
-| Instinct | Tests merged; sound paused pending direction |
+| **Default build** | **Character traversal**: a cloaked figure, a ledge, a stone to push, the exit light. Now with Instinct's sounds (steps, jump, land, push, blocked, reach) |
+| Archived | `?slice=light`: the old disembodied-hand light puzzle, kept for reference |
+| Direction | Character traversal **confirmed** by you via Instinct (D-14a). Biblical noir framing confirmed by you to the Brain (D-12a). Slice content is open |
+| Tests and CI | 41 tests, benchmark gate, Chromium smoke of both slices, on Node 20 and 22 |
+| Next | Brain proposes the next 3-space traversal slice on #14; product questions go to you through Instinct |
 
 ## Run 01 status (closed)
 | Area | State |

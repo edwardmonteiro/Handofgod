@@ -13,9 +13,11 @@ import { TITLE, CARDS, END, MISSING } from './content/genesis1.js';
 
 // ---- Tuning ----------------------------------------------------------------
 const params = new URLSearchParams(location.search);
-// Genesis 1 vertical slice, in narrative order. ?slice=traverse plays the character-traversal prototype
-// (G-09, the direction relayed on issue #14) until the human picks a direction.
-const STAGE_IDS = params.get('slice') === 'traverse' ? ['traverse'] : ['light', 'firmament', 'land'];
+// D-14 (owner-confirmed through Instinct): the game is character traversal, so the traversal slice is the default.
+// ?slice=light keeps the archived disembodied-hand prototype playable for reference. The Firmament and Land hand stages
+// were superseded and are no longer probed, so the four optional 404s are gone.
+const SLICES = { traverse: ['traverse'], light: ['light'] };
+const STAGE_IDS = SLICES[params.get('slice')] || SLICES.traverse;
 const CARD_MIN_S = 2.5;     // a verse card can be skipped after this long
 const CARD_AUTO_S = 9;      // ...and advances by itself after this long
 const RESOLVE_HOLD_S = 3.5; // time on a completed stage before moving on

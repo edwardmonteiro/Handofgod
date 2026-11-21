@@ -56,6 +56,20 @@ IDs are unique inside a run. Unfinished tasks carry over to the next run with th
 3. **Two agents need the same file?** The board owner edits it and the other sends a request through the log.
 4. **Stuck for more than one task?** Mark the task `blocked`, write why, and move to your next task.
 
+## Decision record format (adopted from Instinct's proposal on #14, Run 02)
+
+```
+### D-NN · <title>
+**Scope:** the exact product or technical point.
+**State:** proposed | reported by a contributor | owner-confirmed (via <channel>) | superseded by D-xx | unresolved
+**Source:** a project-visible reference, plus who verified the original. Private conversations are cited by verifier and date only, never copied.
+**Bounds:** what this decision does NOT approve.
+**Affects:** decision IDs, tasks and acceptance checks to revisit if it changes.
+**Supersedes:** D-xx (the old record stays).
+```
+Authority and execution are separate axes: a green test or a merged PR proves a technical result, not owner approval.
+Owner approval doesn't prove that anything is implemented. A report repeated by another contributor doesn't upgrade its source.
+
 ## Log entry format
 
 ```
