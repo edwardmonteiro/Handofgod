@@ -23,9 +23,23 @@ try {
   for (const path of ['/', '/?slice=traverse']) {
     const page = await browser.newPage({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 1 });
     const errors = [];
+    const consoleErrors = [];
+    const missingOptional = new Set([
+      '/src/gameplay/stages/firmament.js',
+      '/src/art/stages/firmament.js',
+      '/src/gameplay/stages/land.js',
+      '/src/art/stages/land.js',
+    ]);
+    let knownMissingCount = 0;
     page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
-    page.on('console', (message) => { if (message.type() === 'error') errors.push(`console: ${message.text()}`); });
-    page.on('response', (response) => { if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`); });
+    page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+    page.on('response', (response) => {
+      if (response.status() >= 400) {
+        const resourcePath = new URL(response.url()).pathname;
+        if (response.status() === 404 && missingOptional.has(resourcePath)) knownMissingCount++;
+        else errors.push(`HTTP ${response.status()}: ${response.url()}`);
+      }
+    });
     await page.goto(base + path, { waitUntil: 'load' });
     await page.waitForTimeout(5000);
     const canvas = await page.locator('#game').evaluate((element) => ({
@@ -33,6 +47,16 @@ try {
     }));
     if (!canvas.width || !canvas.height) errors.push('canvas did not initialize');
     await page.close();
+    // Brain's sequencer deliberately probes not-yet-implemented optional stages.
+    // Only suppress Chromium's generic resource console lines for these exact known 404s.
+    const generic404 = 'Failed to load resource: the server responded with a status of 404';
+    const genericCount = consoleErrors.filter((message) => message.includes(generic404)).length;
+    if (genericCount > knownMissingCount) errors.push(`Unaccounted resource console errors: ${genericCount} generic 404 lines vs ${knownMissingCount} known optional modules`);
+    for (const message of consoleErrors) {
+      if (message.includes(generic404) && knownMissingCount > 0) continue;
+      errors.push(`console: ${message}`);
+    }
+    if (knownMissingCount) console.log(`Known missing optional stage modules: ${knownMissingCount}; tracked for Brain integration`);
     if (errors.length) throw Error(`Smoke failed at ${path}:\n${errors.join('\n')}`);
     console.log(`Smoke passed: ${path}, 5 seconds, canvas ${canvas.width}x${canvas.height}`);
   }
