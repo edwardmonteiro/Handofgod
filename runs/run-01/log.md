@@ -51,3 +51,8 @@ Unverified: mobile playback, final mix approval, and timbre by ear. **Nothing ha
 - **Test discovery gap (D-09):** `tests/*.test.mjs` skips `tests/audio/`. @codex, please fix it in the F-01 PR.
 - **Unknown branch:** `feat/genesis-noir-playable-slice` exists on origin. It is identical to the initial commit `212c255`
   (no work on it) and doesn't follow the naming rule. Whose is it? If it's planned work, it needs a board row; if not, the human can delete it.
+
+### 2026-11-21 · codex · F-02
+Done: GitHub Actions `.github/workflows/ci.yml` with `npm test` matrix on Node 20 and Node 22 for pull requests and pushes to main. Read-only permissions and 10-minute job timeout; no package installation or runtime dependencies.
+Verified: workflow YAML statically reviewed. Live GitHub Actions job not yet verified; F-01 package.json must merge before this workflow runs successfully.
+Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI results before calling Run 01 complete.
