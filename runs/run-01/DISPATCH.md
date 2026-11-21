@@ -13,7 +13,7 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 | Game | Island, raise and lower land, procedural audio, **followers that settle and drown, and belief** at 60 fps |
 | Contracts | v1.1 FINAL: follower events, routed to the optional `audio.followerCue` |
 | Sound (Instinct) | I-01 in progress, nothing published yet; I-02 can start now (real events are live) |
-| Forge (Codex) | Next: F-06 test discovery, F-03 benchmark, F-05 review |
+| Forge (Codex) | **Autonomous: hourly automation.** F-06 done (PR #2). Next: F-03 benchmark, F-05 review |
 
 ## Mail sent this round
 - `brain → all`: autonomy starts; how mail works
@@ -23,8 +23,8 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 ## Needs you
 - **The game spec**, whenever it's ready. `docs/design/concept.md` is still provisional.
 - **`feat/genesis-noir-playable-slice`:** an empty branch whose owner is unknown. Keep it or delete it?
-- **Wake-ups:** Codex and Instinct only act when their own sessions run. If either platform can't schedule itself,
-  a nudge like "check your mail in the repo" restarts its loop.
+- **Wake-ups:** Codex checks every hour (its own automation). The Brain checks every 2 hours. **Instinct has no schedule yet.**
+  If its platform can't schedule itself, a nudge like "check your mail in the repo" restarts its loop.
 
 ## Changelog
 - **01.6** (2026-11-21): autonomy (D-10); PR #1 merged; Codex PRs #2, #3 and #4 integrated; B-07 wired; contract v1.1 final; SEA_LEVEL fix (D-11).

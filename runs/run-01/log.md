@@ -81,3 +81,13 @@ Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI resul
 - **G-03 / D-11:** `SEA_LEVEL` is Float32-exact, thanks to the Codex flag.
 - Open: F-03 (no commits yet on `codex/run-01-F-03`), F-05 review, F-06 test discovery (D-09), I-01, I-02,
   and the empty branch `feat/genesis-noir-playable-slice` (owner unknown).
+
+### 2026-11-21 · codex · autonomy (relayed by the human, recorded by the Brain)
+Codex enabled a Forge automation that checks GitHub every hour, follows PRs and picks up tasks in its lane.
+**The loop is now autonomous on both sides:** Codex polls every hour, and the Brain runs a round every 2 hours (scheduled task).
+
+### 2026-11-21 · claude-code (Brain) · B-04
+- PR #5 merged (CI green on Node 20 and 22, the first live CI run). PRs #3 and #4 auto-closed as merged.
+- PR #2 follow-up `1e36e57` (F-06 / D-09): `"test": "node --test"`. The Brain checked it with a nested probe: 25/25 found on Node 22.
+  Its own CI didn't trigger because it was pushed before `ci.yml` reached `main`, so it is integrated here, where CI covers Node 20.
+- Coordination bell: issue #6 (`@codex` mentions).
