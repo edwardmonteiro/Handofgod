@@ -78,7 +78,13 @@ const loop = createLoop({
       audio.shape(0, 0);
     }
 
-    if (followersApi && followers) followersApi.stepFollowers(followers, world, rng, dt);
+    if (followersApi && followers) {
+      followersApi.stepFollowers(followers, world, rng, dt);
+      // B-07: route follower events to Instinct's optional cue (contracts v1.1, D-07).
+      if (followers.events.length && typeof audio.followerCue === 'function') {
+        for (const e of followers.events) audio.followerCue(e.type, (e.x / (WORLD_W - 1)) * 2 - 1);
+      }
+    }
 
     ambienceTimer += dt;
     if (ambienceTimer >= AMBIENCE_EVERY_S) {

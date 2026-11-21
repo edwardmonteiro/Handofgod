@@ -50,3 +50,15 @@ a nested test was skipped. `node --test tests/` failed, and the quoted glob `'te
 **Decision:** `tests/audio/**` is reserved for Instinct. Forge keeps the rest of `tests/` and must make `npm test` and CI
 discover `tests/**/*.test.mjs` on every Node version CI runs. Forge chooses how; glob support starts at Node 21.
 **Consequence:** audio tests run in CI without a lane collision.
+
+### D-10 · Autonomous coordination: mail in the repo, and the Brain merges to `main`
+**Context:** the human asked the AIs to work together autonomously and stopped relaying messages.
+The human authorised the Brain to merge PRs into `main` (answer in chat, 2026-11-21).
+**Decision:** agents talk through `runs/<run>/mail/` (see `ai/MAIL.md`). The Brain runs a scheduled round: it collects mail
+from every branch, reviews and merges passing in-lane PRs, and replies. `main` is the shared truth.
+**Consequence:** no human relay. The Brain may resolve conflicts in shared append-only files (log, board) when integrating.
+
+### D-11 · `SEA_LEVEL` is Float32-exact
+**Context:** Codex flagged that `0.42` stored in the Float32 heightmap reads back as 0.41999998, so a cell set to sea level counted as water.
+**Decision:** `SEA_LEVEL = Math.fround(0.42)`. Every comparison (world, followers, renderer) now agrees.
+**Consequence:** none visible. It removes an edge-case inconsistency between modules.

@@ -39,7 +39,7 @@ Floats are allowed, meaning positions inside a cell.
 
 ### `world.js`
 ```js
-SEA_LEVEL                     // 0.42; elevation below this is water
+SEA_LEVEL                     // Math.fround(0.42); elevation below this is water (Float32-exact)
 createWorld(w, h, seed) -> World         // World = { w, h, seed, elev: Float32Array(w*h) }, all zero
 generateIsland(world) -> World           // fills elev deterministically from world.seed
 applyBrush(world, cx, cy, radius, amount) -> number
@@ -64,7 +64,7 @@ stepFollowers(followers, world, rng, dt) -> void
     // A follower whose cell becomes water switches to 'drowning' and is removed after 2 s.
 ```
 
-#### Follower events (v1.1, status: **Instinct accepted (01.4); awaiting Codex**)
+#### Follower events (v1.1, status: **FINAL**: accepted by Instinct (01.4) and Codex (F-04); implemented)
 ```js
 // Followers gains one field:
 //   Followers = { list, belief, events: FollowerEvent[] }
@@ -106,7 +106,7 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
   `direction` is `+1` (raise) or `-1` (lower), and `intensity` runs `0..1`.
   `unlock()` must be called from a user gesture handler.
 
-#### Follower cues (v1.1, status: **ACCEPTED by Instinct (01.4)**; wiring waits for Codex and B-07)
+#### Follower cues (v1.1, status: **FINAL**. `main.js` routes events here (B-07); Instinct implements it in I-02)
 - `followerCue(type: 'settle' | 'drown', pan: number)`: `pan` runs `-1..1`, from the event's x position
   across the map width.
 - Optional: the Brain calls it only if `typeof audio.followerCue === 'function'`, so the game runs before I-02 lands.
@@ -119,10 +119,12 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
 | `toggleMute()` | `M` key |
 | `shape(dir, intensity)` | **every simulation step (60 Hz)**, including `shape(0, 0)` while idle. Stays as is: Instinct dedupes repeated values inside audio (D-08) |
 | `ambience(landRatio)` | every 0.5 s |
+| `followerCue(type, pan)` | once per follower event, right after `stepFollowers`, only if the function exists (B-07) |
 
 ---
 
 ## Changelog
+- **1.1b** (2026-11-21): v1.1 FINAL (Codex accepted in F-04). B-07 routing documented. `SEA_LEVEL` is now Float32-exact (D-11).
 - **1.1a** (2026-11-21): Instinct accepted the events and `followerCue` (01.4). Spelled out that each transition emits exactly once.
   `shape()` call rate unchanged (D-08). Codex agreement still pending.
 - **1.1** (2026-11-21): proposed follower events (`Followers.events`) and `Audio.followerCue`.

@@ -14,4 +14,7 @@ As Brain, Claude Code also:
 - reviews and merges other agents' PRs into `main`;
 - takes the orphan jobs: work that falls between lanes or that no one has claimed;
 - writes the next run's folder and seeds (`runs/run-NN/`) when a run closes;
-- every time a run opens or changes, regenerates `runs/<run>/DISPATCH.md` and sends it to the human.
+- runs the **Brain round** (see `ai/MAIL.md`) on every scheduled wake-up: `node ai/bin/scan.mjs`, collect mail
+  from all branches onto `main`, review and merge passing PRs (D-10), answer mail, update the board, log and `DISPATCH.md`;
+- talks to other agents **only through mail files**. The human gets a short status update, plus questions only
+  when a decision needs them (spec, scope, permissions).
