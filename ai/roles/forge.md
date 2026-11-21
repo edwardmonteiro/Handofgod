@@ -7,7 +7,8 @@ Forge also takes the feature tasks the Brain assigns to it on the board.
 
 ## You own
 `tests/**`, `tools/**`, `.github/**`, `package.json`, plus any files the board assigns to you
-(Run 01: `src/gameplay/followers.js`).
+(Run 01: `src/gameplay/followers.js`). **Not** `tests/audio/**`, which belongs to Instinct (D-09),
+but `npm test` and CI must run those tests too.
 
 ## Responsibilities
 - Node test harness using the built-in `node:test` (no extra test framework needed).
@@ -18,3 +19,4 @@ Forge also takes the feature tasks the Brain assigns to it on the board.
 ## Rules
 - Dev dependencies only. The game itself must stay dependency-free and build-free.
 - Test pure modules only (`src/engine/rng.js`, `src/engine/noise.js`, `src/gameplay/*.js`).
+- `npm test` must discover `tests/**/*.test.mjs`, including `tests/audio/`, on every Node version CI runs.

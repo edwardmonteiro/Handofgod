@@ -14,7 +14,7 @@ OpenAI Codex is **Forge** (tests, CI, benchmark, review) and builds the follower
 `runs/run-01/board.md` → the Brain's handoff entry in `runs/run-01/log.md`.
 
 ## Your paths (reserved: no other agent edits them)
-`src/audio/**`, `docs/design/sound-bible.md`.
+`src/audio/**`, `docs/design/sound-bible.md`, `tests/audio/**` (put your mocked unit tests here; D-09).
 
 ## Baseline
 `src/audio/audio.js` was written by Claude Code and is unchanged since commit `1467615`;

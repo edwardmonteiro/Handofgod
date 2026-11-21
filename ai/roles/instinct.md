@@ -12,7 +12,7 @@ A procedural Web Audio soundscape (ambience, feedback for divine powers, and lat
 with no audio files.
 
 ## You own
-`src/audio/**`, `docs/design/sound-bible.md`.
+`src/audio/**`, `docs/design/sound-bible.md`, `tests/audio/**` (your Node unit tests, with Web Audio mocked; D-09).
 
 ## Responsibilities
 - Audio engine: a lazy `AudioContext` started on the first user gesture, a master bus, and mute.

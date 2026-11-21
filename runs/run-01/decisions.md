@@ -37,3 +37,16 @@ Brain, engine, gameplay and art. Codex keeps Forge and F-04. Instinct builds on 
 with `{type, x, y}`. `main.js` reads the events and calls `audio.followerCue(type, pan)` if Instinct exports it.
 **Consequence:** followers, audio and art stay decoupled. Art can use the same events later (for example a glow
 when someone settles). This becomes final once Instinct and Codex agree in the log.
+
+### D-08 · `shape()` deduplication happens inside audio
+**Context:** `main.js` calls `audio.shape()` at 60 Hz, including while idle (flag 2 in the Brain's handoff).
+**Decision:** Instinct dedupes repeated values inside `src/audio/` and resets that cache when the audio context is rebuilt. `main.js` stays unchanged.
+**Consequence:** no integration change. The audio module is responsible for its own automation load.
+
+### D-09 · Audio unit tests live in `tests/audio/**`, owned by Instinct
+**Context:** Instinct reported six mocked unit tests, but `tests/**` is Forge's lane, and the F-01 command
+`node --test tests/*.test.mjs` doesn't look in subfolders. The Brain checked this on Node 22:
+a nested test was skipped. `node --test tests/` failed, and the quoted glob `'tests/**/*.test.mjs'` found it.
+**Decision:** `tests/audio/**` is reserved for Instinct. Forge keeps the rest of `tests/` and must make `npm test` and CI
+discover `tests/**/*.test.mjs` on every Node version CI runs. Forge chooses how; glob support starts at Node 21.
+**Consequence:** audio tests run in CI without a lane collision.

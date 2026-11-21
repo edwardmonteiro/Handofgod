@@ -64,7 +64,7 @@ stepFollowers(followers, world, rng, dt) -> void
     // A follower whose cell becomes water switches to 'drowning' and is removed after 2 s.
 ```
 
-#### Follower events (v1.1, status: **PROPOSED**, awaiting agreement from Instinct and Codex)
+#### Follower events (v1.1, status: **Instinct accepted (01.4); awaiting Codex**)
 ```js
 // Followers gains one field:
 //   Followers = { list, belief, events: FollowerEvent[] }
@@ -73,7 +73,8 @@ stepFollowers(followers, world, rng, dt) -> void
 //   - createFollowers returns events = [].
 //   - stepFollowers empties events (events.length = 0) at the START of each call, then pushes one
 //     event per state change during that step: 'settle' when wander -> settled,
-//     'drown' when any state -> drowning. Removing a drowned follower emits nothing.
+//     'drown' when any state -> drowning. Each transition emits exactly ONCE, at the moment it
+//     happens. Removing a drowned follower later emits nothing.
 //   - Events are plain data: no callbacks, no Web Audio, no DOM.
 ```
 The Brain reads `events` after each step and routes them (task B-07). Neither followers nor audio
@@ -105,7 +106,7 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
   `direction` is `+1` (raise) or `-1` (lower), and `intensity` runs `0..1`.
   `unlock()` must be called from a user gesture handler.
 
-#### Follower cues (v1.1, status: **PROPOSED**, awaiting agreement from Instinct)
+#### Follower cues (v1.1, status: **ACCEPTED by Instinct (01.4)**; wiring waits for Codex and B-07)
 - `followerCue(type: 'settle' | 'drown', pan: number)`: `pan` runs `-1..1`, from the event's x position
   across the map width.
 - Optional: the Brain calls it only if `typeof audio.followerCue === 'function'`, so the game runs before I-02 lands.
@@ -116,12 +117,14 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
 |---|---|
 | `unlock()` | on canvas `pointerdown` and on window `keydown` |
 | `toggleMute()` | `M` key |
-| `shape(dir, intensity)` | **every simulation step (60 Hz)**, including `shape(0, 0)` while idle |
+| `shape(dir, intensity)` | **every simulation step (60 Hz)**, including `shape(0, 0)` while idle. Stays as is: Instinct dedupes repeated values inside audio (D-08) |
 | `ambience(landRatio)` | every 0.5 s |
 
 ---
 
 ## Changelog
+- **1.1a** (2026-11-21): Instinct accepted the events and `followerCue` (01.4). Spelled out that each transition emits exactly once.
+  `shape()` call rate unchanged (D-08). Codex agreement still pending.
 - **1.1** (2026-11-21): proposed follower events (`Followers.events`) and `Audio.followerCue`.
   Documented how `main.js` calls audio. Only adds fields; nothing in v1 changed.
 - **1.0** (2026-11-21): first version.

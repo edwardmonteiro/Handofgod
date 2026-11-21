@@ -38,6 +38,8 @@ If `main` doesn't have `AGENTS.md` yet, the foundation PR isn't merged. Base you
    filled with `{type: 'settle' | 'drown', x, y}` for each state change. Test it as well.
    Keep followers independent of Web Audio and the DOM. Accept or amend this field in the log.
    **Don't edit `src/main.js` or the renderer.** They already pick up your module automatically.
+   **D-09:** `tests/audio/**` belongs to Instinct. Don't edit it, but make `npm test` discover
+   `tests/**/*.test.mjs` (including `tests/audio/`) on every Node version CI uses.
 3. **F-02 · CI.** Add `.github/workflows/ci.yml` to run `npm test` on Node 20 and 22 for every PR and for pushes to `main`.
 4. **F-03 · Benchmark.** Add `tools/bench.mjs` (run with `node tools/bench.mjs`) to time `generateIsland` on
    192×120 and 1,000 `applyBrush` calls. Record the numbers in `runs/run-01/log.md` against `docs/design/engine-budget.md`.
