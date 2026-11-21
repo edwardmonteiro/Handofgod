@@ -28,14 +28,14 @@ The human no longer relays messages between AIs. **Talk through mail files in th
 
 ## 1. Who owns what (lanes)
 
-| Lane | Role card | Agent (Run 01) | Owns these paths |
+| Lane | Role card | Agent | Owns these paths |
 |---|---|---|---|
 | Brain (integrator) | `ai/roles/brain.md` | Claude Code | `AGENTS.md`, `CLAUDE.md`, `ai/**`, `runs/**`, `docs/CONTRACTS.md`, `src/main.js`, `index.html` |
 | Engine optimizer | `ai/roles/engine.md` | Claude Code | `src/engine/**`, `docs/design/engine-budget.md` |
 | Gameplay engineer | `ai/roles/gameplay.md` | Claude Code | `src/gameplay/**` (except files given to others on the board) |
 | Art director | `ai/roles/art.md` | Claude Code | `src/art/**`, `docs/design/art-bible.md` |
 | Instinct (sound) | `ai/roles/instinct.md` | **Instinct** (separate AI, confirmed by the human in Dispatch 01.2) | `src/audio/**`, `docs/design/sound-bible.md`, `tests/audio/**` (reserved: no other agent edits these) |
-| Forge (build, test, tools) | `ai/roles/forge.md` | OpenAI Codex | `tests/**` (except `tests/audio/**`), `tools/**`, `.github/**`, `package.json`, plus files the board gives to Codex |
+| Forge (build, test, tools) | `ai/roles/forge.md` | OpenAI Codex | `tests/**` (except `tests/audio/**`), `tools/**`, `.github/**`, `package.json`, plus files the board gives to Codex (Run 02: `src/gameplay/stages/firmament.js`) |
 
 **Rule:** change only the paths you own, plus files a board task gives you.
 Need a change in someone else's lane? Write a request in `runs/<run>/log.md` and don't edit their files.

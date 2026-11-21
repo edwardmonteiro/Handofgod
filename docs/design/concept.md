@@ -1,26 +1,84 @@
-# Concept (provisional)
+# A Mão de Deus · Hand of God: creative brief
 
-> **Status:** working concept written by the Brain for Run 01, because no game spec had arrived yet.
-> When the human's spec lands, it replaces this file. Gameplay and art then adjust in the next run.
+**Status:** APPROVED direction (the human confirmed it in chat on 2026-11-21, decision D-12). It replaces the provisional island sandbox.
+**Owner:** Brain (gameplay and art). Sound direction: Instinct, working from this brief.
 
 ## One line
-You are a god with only one tool, your hand. Reshape a small island so that wandering followers
-can survive, settle and believe in you. Their belief is what powers your hand.
+A cinematic, black-and-white noir suspense adventure. You are a **restrained divine hand** (light, wind, water,
+protection) moving through the Bible **in narrative order**, solving tactile environmental puzzles that let each passage happen.
+
+## What it is, and what it isn't
+| It is | It isn't |
+|---|---|
+| Emotional discovery, awe, suspense | Combat, enemies, health bars |
+| Tactile, satisfying environmental puzzles | Grinding, economies, follower management |
+| Restraint: small gestures, big consequences | A power fantasy of smiting things |
+| Chronological chapters, one passage at a time | An open sandbox |
 
 ## Pillars
-1. **Tactile power.** Shaping land must feel physical: you see it, hear it, and it pushes back.
-2. **A living consequence.** Every gesture changes where followers can live, or drown.
-3. **Small and readable.** One island on one screen. Depth comes from systems, not map size.
+1. **Restraint is power.** The hand rarely touches anything directly. It shapes light, wind and water, and the world responds.
+2. **Tactile clarity.** Every gesture (press, hold, drag, release) gives immediate visual and audio feedback. Puzzles are about the feel of the elements, not about reading UI.
+3. **Noir reverence.** High-contrast monochrome, deep shadow, film grain, silence used as a tool. Light is the only "colour".
+4. **Scripture as the spine.** Each stage opens with its verse and resolves when the passage is fulfilled. Order is never broken.
 
-## Core loop
-```
-shape land -> followers find fertile ground -> they settle -> belief grows -> new powers unlock -> shape more ambitiously
-```
-
-## Run roadmap (draft)
-| Run | Theme |
+## Controls (mouse and touch first)
+| Gesture | Divine element |
 |---|---|
-| 01 | Foundation: island, raise and lower land, sound, followers, test and CI pipeline |
-| 02 | Belief economy: shaping costs belief, powers unlock, settlements grow |
-| 03 | Weather and disasters: rain, drought, a rising sea |
-| 04 | Juice and onboarding: particles, music, first-five-minutes tutorial |
+| Press and hold | Gather (light pools under the hand; water is drawn in) |
+| Drag | Wind or current follows the hand |
+| Release | Let go: what was gathered disperses or settles |
+| Second finger, or right button | The alternate form of the element (for example, part rather than gather) |
+
+## Chapter order (roadmap)
+1. **Genesis 1, Creation:** light, separation, emergence. *The vertical slice (Run 02).*
+2. Eden and the Fall
+3. Cain and Abel
+4. Noah
+5. Babel
+6. Abraham
+7. Joseph
+8. Exodus, and onward
+
+## Vertical slice: Genesis 1, three stages (Run 02)
+Each stage: a title card with the verse, then the puzzle, then a moment of resolution, then a fade.
+
+### Stage 1 · "Let there be light" (Genesis 1:3–5)
+- **Scene:** total darkness over the formless deep. Faint drifting motes of light.
+- **Mechanic:** press and hold to gather motes into a growing light under the hand. Gathered light reveals the hidden
+  surface of the deep. Release, and the light stays where it was placed but fades slowly.
+- **Puzzle:** light enough of the deep at once (coverage threshold) to "divide the light from the darkness".
+- **Resolution:** the light spreads into the first day; darkness retreats to one side ("evening and morning").
+- **Done when:** lit coverage reaches the target and holds for 2 s.
+
+### Stage 2 · "A firmament in the midst of the waters" (Genesis 1:6–8)
+- **Scene:** one undivided mass of churning water filling the frame.
+- **Mechanic:** drag upward to lift mist and water with wind; the alternate gesture presses water down. A visible line
+  (the firmament) forms where the two separated bodies hold apart.
+- **Puzzle:** balance the waters above and below so the firmament stays level across the screen, within tolerance, for 3 s.
+- **Resolution:** sky above, sea below.
+- **Done when:** both bodies are within the balance tolerance for 3 s.
+
+### Stage 3 · "Let the dry land appear" (Genesis 1:9–10, a hint of 1:11)
+- **Scene:** the sea below the firmament, unbroken.
+- **Mechanic:** gather the waters to one place (hold and drag currents); land rises where the water withdraws.
+  This **reuses the Run 01 heightmap** (`world.js`), with the raise/lower brush driven by currents rather than painted.
+- **Puzzle:** reach a target land shape (a single landmass above a coverage threshold, without breaking it into islands).
+- **Resolution:** the first grass ripples across the land (1:11); the chapter title card appears.
+- **Done when:** the land ratio is within its target band and forms one connected mass.
+
+## What carries over from Run 01
+- Engine (loop, input, rng, noise), the heightmap (`world.js`, used in Stage 3), CI, tests, the benchmark and the mail protocol.
+- **Followers and belief are retired from the slice.** The module stays in the repo (tested, contract v1.1)
+  for possible later chapters, but `main.js` stops loading it once the stage sequencer lands.
+
+## Text and licensing
+- Verse text must come from **public-domain translations** (for example, the World English Bible) or be original paraphrase.
+  Portuguese text must be original or from a verified public-domain edition. Record the source in `docs/design/text-sources.md`.
+- Title: **A Mão de Deus**, subtitle **Hand of God**.
+
+## Acceptance for the slice (Run 02 definition of done)
+- [ ] All three stages are playable in order with mouse and with touch, each with a verse card, a puzzle, a resolution and a transition.
+- [ ] A full black-and-white noir look (art bible v2) at 60 fps, within the engine budget, with no console errors.
+- [ ] A scene-driven noir soundscape (Instinct) that reacts to each stage's events.
+- [ ] Pure stage logic is unit-tested, and CI is green.
+- [ ] A first-time player finishes the slice in 5–10 minutes without a tutorial wall of text.

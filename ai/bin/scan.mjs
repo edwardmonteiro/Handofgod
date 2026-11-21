@@ -14,6 +14,7 @@ const LANES = [
   [/^tests\/audio\//, 'instinct'],
   [/^(src\/audio\/|docs\/design\/sound-bible\.md)/, 'instinct'],
   [/^src\/gameplay\/followers\.js$|^tests\/followers\.test\.mjs$/, 'codex'],
+  [/^src\/gameplay\/stages\/firmament\.js$/, 'codex'],   // Run 02 G-07
   [/^(tests\/|tools\/|\.github\/|package\.json$|package-lock\.json$)/, 'codex'],
   [/^runs\/[^/]+\/mail\//, 'anyone'],
   [/^runs\/[^/]+\/(log|decisions)\.md$/, 'anyone'],     // append-only shared files

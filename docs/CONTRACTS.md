@@ -1,6 +1,6 @@
 # Module contracts
 
-**Version:** 1.1 (2026-11-21) · see the changelog at the end.
+**Version:** 2.0-proposed (2026-11-21) · v1.1 is final; the v2 stage contracts below are PROPOSED for Run 02 · changelog at the end.
 
 **Owner:** Brain. This is the single source of truth for every API that crosses a lane.
 If code disagrees with this file, the code is wrong. To change a contract, ask in the run log
@@ -123,7 +123,53 @@ Once it exists, the renderer draws `list` and the HUD shows `belief`. No other w
 
 ---
 
+## v2 (PROPOSED, Run 02): stages for the Genesis 1 vertical slice
+
+The approved direction is in `docs/design/concept.md` (D-12). These contracts let Gameplay, Art, Audio and Forge build stages in parallel.
+Status: **PROPOSED.** Codex and Instinct accept or amend by mail. The Brain finalises.
+
+### Stage logic: `src/gameplay/stages/<id>.js` (pure: no DOM, no audio)
+```js
+export const meta = { id: 'light', order: 1, verse: 'Genesis 1:3-5', title: 'Let there be light' };
+export function createStage(seed) -> StageState
+export function stepStage(state, intent, dt) -> void
+// Intent (built by main.js from engine input; every coordinate is NORMALISED 0..1, resolution-independent):
+//   { x, y, active: boolean,      // pointer down (primary)
+//     alt: boolean,               // alternate gesture (second finger, right button, Shift)
+//     dx, dy }                    // pointer movement since the last step, normalised
+// StageState must contain at least:
+//   progress: number              // 0..1, monotonic toward completion where the design allows
+//   complete: boolean             // true once the stage's "done when" rule holds
+//   events: StageEvent[]          // emptied at the START of each step, like followers.events
+//   ...plus any render-facing fields, documented at the top of the stage module
+// StageEvent = { type: string, x: number, y: number, strength: number }   // x, y normalised; strength 0..1
+//   Stage 1 'light' emits:  'gather' (hold starts), 'release', 'reveal' (new coverage), 'divide' (complete)
+//   Stage 2 'firmament':   'lift', 'press', 'balance' (enters tolerance), 'part' (complete)
+//   Stage 3 'land':        'withdraw', 'emerge', 'grass' (complete)
+```
+Rules: deterministic for a given seed and intent sequence. All tuning values are named constants at the top of the module.
+
+### Stage rendering: `src/art/stages/<id>.js` (Art lane)
+```js
+export function drawStage(ctx, state, view, time) -> void   // view = { w, h, dpr } in canvas pixels
+```
+It reads only documented `state` fields. Post-processing (grain, vignette, bloom) is applied afterwards by `src/art/post.js`.
+
+### Sequencer: `src/main.js` (Brain lane)
+It runs the stages in `order`, shows a verse card before each one, and moves on once `complete` holds and the resolution beat has played.
+It routes each `state.events` entry to audio.
+
+### Audio: additions to `src/audio/audio.js` (Instinct lane; both optional, guarded by `typeof === 'function'`)
+```js
+scene(id: 'title' | 'light' | 'firmament' | 'land' | 'card')   // crossfade to that stage's soundscape
+stageEvent(type: string, pan: number, strength: number)        // pan -1..1 from event x; strength 0..1
+```
+The existing `unlock()`, `toggleMute()` and `muted` stay. `shape()`, `ambience()` and `followerCue()` remain valid for v1 code.
+
+---
+
 ## Changelog
+- **2.0-proposed** (2026-11-21): stage logic, stage rendering, sequencer and audio `scene`/`stageEvent` for the Genesis 1 slice (D-12). Awaiting Codex and Instinct.
 - **1.1b** (2026-11-21): v1.1 FINAL (Codex accepted in F-04). B-07 routing documented. `SEA_LEVEL` is now Float32-exact (D-11).
 - **1.1a** (2026-11-21): Instinct accepted the events and `followerCue` (01.4). Spelled out that each transition emits exactly once.
   `shape()` call rate unchanged (D-08). Codex agreement still pending.

@@ -120,3 +120,15 @@ Blocked/Requests: @brain review PR; @instinct can add tests/audio/*.test.mjs wit
 - **Product direction (G-04, issue #14):** Codex relays the human's direction as a biblical chronological black-and-white noir puzzle-adventure.
   The Brain is confirming it with the human directly before rewriting the concept. B-05 and G-02 are blocked on it.
 - **F-07 runner:** reviewed as safe. It checks out trusted `main`, runs only from a label or an opt-in schedule, has a concurrency limit, and does nothing until the human adds a secret.
+
+### 2026-11-21 · claude-code (Brain) · B-05: RUN 01 CLOSED (retro)
+**Shipped:** the parallel-AI operating system (lanes, contracts, mail, scheduled Brain round, gated Actions runner); a playable island
+with raise and lower; procedural reactive audio (Instinct); followers with events (Codex); 24 tests; CI on Node 20 and 22; benchmark
+(generation p95 3.6 ms against the 50 ms budget); an independent review with 8 findings (2 fixed, 2 parked).
+**What worked:** file-ownership lanes meant zero cross-lane edits by any agent. Contract-first interfaces (follower events) let three agents
+build without blocking. Codex's independent review caught a real bug (Float32 sea level) and the product drift.
+**What broke:** the Brain wrote a provisional concept without the human's spec, and it was wrong (D-05 to D-12). Every PR touched the shared
+log and board, so every merge conflicted (resolved by union). Instinct's tests weren't committed. Instinct has no automatic wake-up.
+**Changes for Run 02:** the product direction is now approved (D-12). Agents should put their log notes in **mail files** (unique filenames,
+so no conflicts) rather than appending to `log.md`. Only the Brain appends to `log.md` and edits `board.md` (D-13).
+**Carry-over:** I-03 (audio tests). E-02 and A-02 are folded into Run 02's E-03 and A-03.
