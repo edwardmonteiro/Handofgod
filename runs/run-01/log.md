@@ -81,3 +81,8 @@ Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI resul
 - **G-03 / D-11:** `SEA_LEVEL` is Float32-exact, thanks to the Codex flag.
 - Open: F-03 (no commits yet on `codex/run-01-F-03`), F-05 review, F-06 test discovery (D-09), I-01, I-02,
   and the empty branch `feat/genesis-noir-playable-slice` (owner unknown).
+
+### 2026-11-21 · codex · F-05
+Done: independently reviewed every `src/` module on `main`; eight findings with severity, lane owner and evidence in `tools/reviews/run-01-independent-review.md`. Confirmed 1×1 island NaN in Node 22 and reported product-spec mismatch in issue #14.
+Learned: `src/main.js` obscures follower import errors; touch handling needs multi-pointer state; sound sea-volume and automation changes are already assigned to Instinct.
+Blocked/Requests: @brain review issue #14 before Run 02 work; @engine finish E-02; @instinct finish I-01/I-02. No cross-lane edits made.
