@@ -12,6 +12,15 @@ const CUE_GAP = 0.09;
 const CUE_MAX_VOICES = 4;
 const MUTE_KEY = 'handofgod.muted';
 
+const STAGE_CUES = {
+        step: [92, 48, 0.075, 0.035, 'triangle', 0.16],
+        jump: [110, 165, 0.14, 0.032, 'sine', 0.16],
+        land: [100, 38, 0.19, 0.065, 'triangle', 0.12],
+        push: [72, 45, 0.28, 0.045, 'triangle', 0.35],
+        blocked: [140, 100, 0.12, 0.032, 'sine', 0.8],
+        reach: [220, 330, 0.7, 0.05, 'sine', 1.5],
+};
+
 export function createAudio() {
   let ctx = null;
   let master, seaGain, seaFilter, seaSwellDepth, droneGain, shapeGain, shapeFilter, shapeOsc;
@@ -19,6 +28,9 @@ export function createAudio() {
   let lastDirection = null, lastIntensity = null;
   let nextCueAt = 0;
   const cueEnds = [];
+  let activeScene = null;
+  const stageEnds = [];
+  const stageNext = new Map();
 
   function build() {
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -78,7 +90,20 @@ export function createAudio() {
     noise.start();
     swell.start();
     shapeOsc.start();
+    applyScene();
     return true;
+  }
+
+  // Only traversal/cards have an agreed functional sound use here. Other scenes are inert.
+  function applyScene() {
+    if (!ctx || !activeScene) return;
+    const t = ctx.currentTime;
+    const playing = activeScene === 'traverse';
+    seaGain.gain.setTargetAtTime(playing ? 0.018 : 0, t, 0.35);
+    seaSwellDepth.gain.setTargetAtTime(playing ? 0.006 : 0, t, 0.35);
+    seaFilter.frequency.setTargetAtTime(playing ? 240 : 520, t, 0.35);
+    droneGain.gain.setTargetAtTime(playing ? 0.012 : 0, t, 0.35);
+    shapeGain.gain.setTargetAtTime(0, t, 0.05);
   }
 
   const api = {
@@ -156,12 +181,53 @@ export function createAudio() {
       voice.start(t);
       voice.stop(t + duration + 0.02);
     },
+    /** Store scene before the first gesture, never unlock implicitly. */
+    scene(id) {
+      if (id !== 'traverse' && id !== 'card' && id !== 'title') return;
+      if (activeScene === id) return;
+      activeScene = id;
+      stageNext.clear();
+      applyScene();
+    },
+    /** Functional traversal cues, not a final score or approval of a narrative theme. */
+    stageEvent(type, pan = 0, strength = 1) {
+      const spec = STAGE_CUES[type];
+      if (!spec || !ctx || ctx.state !== 'running' || muted || activeScene !== 'traverse') return;
+      const t = ctx.currentTime;
+      for (let i = stageEnds.length - 1; i >= 0; i--) if (stageEnds[i] <= t) stageEnds.splice(i, 1);
+      // Keep one slot for reach so a footstep burst cannot swallow completion feedback.
+      if (t < (stageNext.get(type) || 0) || stageEnds.length >= (type === 'reach' ? 6 : 5)) return;
+      strength = Number.isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 0;
+      if (strength === 0) return;
+      const [from, to, duration, gain, wave, gap] = spec;
+      stageNext.set(type, t + gap);
+      stageEnds.push(t + duration + 0.02);
+      const voice = ctx.createOscillator();
+      const envelope = ctx.createGain();
+      const position = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      voice.type = wave;
+      voice.frequency.setValueAtTime(from, t);
+      voice.frequency.exponentialRampToValueAtTime(to, t + duration * 0.8);
+      envelope.gain.setValueAtTime(0, t);
+      envelope.gain.linearRampToValueAtTime(gain * Math.sqrt(strength), t + 0.008);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+      voice.connect(envelope);
+      if (position) {
+        position.pan.value = Number.isFinite(pan) ? Math.max(-1, Math.min(1, pan)) : 0;
+        envelope.connect(position).connect(master);
+      } else envelope.connect(master);
+      voice.onended = () => { voice.disconnect(); envelope.disconnect(); if (position) position.disconnect(); };
+      voice.start(t);
+      voice.stop(t + duration + 0.02);
+    },
     dispose() {
       if (ctx) ctx.close();
       ctx = null;
       lastDirection = lastIntensity = null;
       cueEnds.length = 0;
       nextCueAt = 0;
+      stageEnds.length = 0;
+      stageNext.clear();
     },
   };
   return api;
