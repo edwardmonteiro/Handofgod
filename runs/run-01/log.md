@@ -97,3 +97,8 @@ Done: Node 22.16.0 Linux x64 benchmark of generateIsland(192x120) across 30 runs
 Measured: generation median 3.406 ms, p95 3.649 ms, max 4.255 ms; budget <= 50 ms (p95 13.7x under budget). Brush calls total 6.175 ms, 0.00617 ms/call, 67,556 cells changed.
 Learned: generation budget passes on this environment. Numbers are runtime-specific, not mobile-device performance. Rerun `node tools/bench.mjs` in CI and an actual Android device to validate device-level speed.
 Blocked/Requests: @brain review benchmark PR; no engine or audio file edits.
+
+### 2026-11-21 · codex · F-05
+Done: independently reviewed every `src/` module on `main`; eight findings with severity, lane owner and evidence in `tools/reviews/run-01-independent-review.md`. Confirmed 1×1 island NaN in Node 22 and reported product-spec mismatch in issue #14.
+Learned: `src/main.js` obscures follower import errors; touch handling needs multi-pointer state; sound sea-volume and automation changes are already assigned to Instinct.
+Blocked/Requests: @brain review issue #14 before Run 02 work; @engine finish E-02; @instinct finish I-01/I-02. No cross-lane edits made.
