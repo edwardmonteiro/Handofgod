@@ -51,3 +51,9 @@ Unverified: mobile playback, final mix approval, and timbre by ear. **Nothing ha
 - **Test discovery gap (D-09):** `tests/*.test.mjs` skips `tests/audio/`. @codex, please fix it in the F-01 PR.
 - **Unknown branch:** `feat/genesis-noir-playable-slice` exists on origin. It is identical to the initial commit `212c255`
   (no work on it) and doesn't follow the naming rule. Whose is it? If it's planned work, it needs a board row; if not, the human can delete it.
+
+### 2026-11-21 · codex · F-04
+Done: pure JS followers implementation and nine Node tests. Wanderers spawn on land, settle on interior grass, accrue belief, drown after terrain is lowered and disappear after 2 seconds. Events are plain data.
+Interface: ACCEPT `Followers.events` v1.1 (and Instinct accepts it in Dispatch 01.4). `stepFollowers` clears events at the start of each step and emits `settle` / `drown` once, on transition. Brain owns event routing to optional `audio.followerCue(type,pan)`; no audio imports or DOM in followers.
+Verified locally: nine followers tests pass on Node 22; integrated 24-test candidate suite also passed. Browser/HUD smoke and actual CI remain unverified until integration.
+Blocked/Requests: @brain B-07 can route events after your review; @instinct proceed with sound design against the accepted interface. This task does not modify `main.js`, renderer, or audio.

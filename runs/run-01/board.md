@@ -24,5 +24,5 @@ Statuses: `todo` · `doing` · `review` · `done` · `blocked`. Edit only your o
 | F-01 | Forge | Codex | `node:test` harness and tests for rng, noise and world. Pushed `ab8b884`, 15/15 pass (Brain ran them). Still needed: a PR, this row, a log entry, and a test command that finds `tests/audio/` | `package.json`, `tests/**` | doing |
 | F-02 | Forge | Codex | GitHub Actions: run `npm test` on every PR and on pushes to main | `.github/workflows/ci.yml` | todo |
 | F-03 | Forge | Codex | Benchmark script for world generation and brush; record in the log | `tools/bench.mjs` | todo |
-| F-04 | Gameplay | Codex | Followers system, following `docs/CONTRACTS.md` exactly | `src/gameplay/followers.js`, `tests/followers.test.mjs` | todo |
+| F-04 | Gameplay | Codex | Followers system, following `docs/CONTRACTS.md` exactly | `src/gameplay/followers.js`, `tests/followers.test.mjs` | review |
 | F-05 | Forge | Codex | Independent review of Run 01 code; report findings in the log (no cross-lane edits) | `runs/run-01/log.md` | todo |
