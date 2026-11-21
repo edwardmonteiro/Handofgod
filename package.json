@@ -6,9 +6,13 @@
   "description": "Dependency-free Forge test and tooling harness",
   "scripts": {
     "test": "node --test",
-    "bench": "node tools/bench.mjs"
+    "bench": "node tools/bench.mjs",
+    "smoke": "node tools/browser-smoke.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "1.56.0"
   }
 }

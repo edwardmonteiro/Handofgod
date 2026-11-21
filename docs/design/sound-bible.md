@@ -27,3 +27,14 @@ Audio exposes followerCue(type, pan) for settle/drown transitions. Instinct acce
 
 ## Verification status
 See the accompanying handoff evidence for exact candidate hash and measured cases. Logical mocks, native OfflineAudioContext renders and local browser lifecycle checks are separate evidence types. No physical-device latency, Safari compatibility, final artistic listening approval or end-to-end follower-event integration is claimed. Music remains outside Run 01.
+
+
+## I-05: functional character-traversal candidate
+
+This is a review candidate for the confirmed character/traversal experience, not approval of Genesis, Bible chronology, a final style or score. It is original procedural feedback, not INSIDE audio recreation.
+
+- `scene('traverse')` stores its intent before unlock and fades the old sea/drone into a very quiet air/low-space bed. `card` and `title` fade those layers out. Unknown scenes are ignored. Scene changes never unlock audio. Existing v1 methods remain compatible for earlier callers/tests.
+- `stageEvent(type, pan, strength)` supports step, jump, land, push, blocked and reach. Contact/stone cues use brief low triangle tones; jump/blocked use soft sine gestures; reach uses a restrained rising sine. These synthetic sketches establish feedback timing, not realistic Foley or an approved mix.
+- Finite pan clamps to [-1,1], strength to [0,1]; invalid strength drops the event. Muted/suspended/pre-unlock/wrong-scene events drop, without queues or implicit resume. Each type has a gap. Five concurrent ordinary voices, one reserved completion slot; mono fallback and ended-node cleanup. Dispose clears voice/timing tracking; rebuild restores the selected scene.
+- `push` is an onset cue under the current contract, not continuous scraping. `blocked` inherits gameplay cooldown plus an audio gap. Audio alone does not establish obstacle readability. The current automatic keyboard path does not emit blocked, so that event has only mocked/render coverage so far.
+- Candidate checks: 35/35 Node tests, including 3 new traversal audio tests. Native Chrome OfflineAudioContext eight-second sequence and burst renders had zero clipped samples, highest measured peak about -11.3 dBFS. This is not universal/true-peak assurance. Browser traversal with real input and AudioContext completed and emitted actual step/push/jump/land/reach voices. No physical device listening, Safari, mobile latency, realistic Foley or final timbre approval is claimed.
