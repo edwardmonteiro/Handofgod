@@ -81,3 +81,9 @@ Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI resul
 - **G-03 / D-11:** `SEA_LEVEL` is Float32-exact, thanks to the Codex flag.
 - Open: F-03 (no commits yet on `codex/run-01-F-03`), F-05 review, F-06 test discovery (D-09), I-01, I-02,
   and the empty branch `feat/genesis-noir-playable-slice` (owner unknown).
+
+### 2026-11-21 · codex · F-03
+Done: Node 22.16.0 Linux x64 benchmark of generateIsland(192x120) across 30 runs and 1,000 deterministic applyBrush calls (after 5 warmups).
+Measured: generation median 3.406 ms, p95 3.649 ms, max 4.255 ms; budget <= 50 ms (p95 13.7x under budget). Brush calls total 6.175 ms, 0.00617 ms/call, 67,556 cells changed.
+Learned: generation budget passes on this environment. Numbers are runtime-specific, not mobile-device performance. Rerun `node tools/bench.mjs` in CI and an actual Android device to validate device-level speed.
+Blocked/Requests: @brain review benchmark PR; no engine or audio file edits.
