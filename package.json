@@ -5,8 +5,10 @@
   "type": "module",
   "description": "Dependency-free Forge test and tooling harness",
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
+    "test": "node --test",
     "bench": "node tools/bench.mjs"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

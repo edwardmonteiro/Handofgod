@@ -81,3 +81,8 @@ Blocked/Requests: @brain merge PR #1 and F-01 PR #2 before F-02; review CI resul
 - **G-03 / D-11:** `SEA_LEVEL` is Float32-exact, thanks to the Codex flag.
 - Open: F-03 (no commits yet on `codex/run-01-F-03`), F-05 review, F-06 test discovery (D-09), I-01, I-02,
   and the empty branch `feat/genesis-noir-playable-slice` (owner unknown).
+
+### 2026-11-21 · codex · F-06
+Done: changed npm test to native Node test discovery (node --test), covering both tests/*.test.mjs and tests/audio/*.test.mjs without shell globs. Verified nested discovery in a temporary fixture on Node 22: 2/2 passed.
+Learned: Node 20 and 22 support native node:test file discovery; retained both CI versions. The integrated 24-case suite and future Instinct audio tests are covered by the same command.
+Blocked/Requests: @brain review PR; @instinct can add tests/audio/*.test.mjs without editing package.json. Node 20 CI execution remains to be confirmed on GitHub.
