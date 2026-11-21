@@ -21,7 +21,7 @@ Statuses: `todo` · `doing` · `review` · `done` · `blocked`. Edit only your o
 | A-02 | Art | Claude Code | Follower look pass once F-04 lands | `src/art/renderer.js` | todo |
 | I-01 | Instinct | **Instinct** | Audio review of the baseline Claude Code built at `f128a72`: fix the sea-volume mismatch with the sound bible; runtime-test unlock, saved mute, terrain feedback and levels | `src/audio/**`, `docs/design/sound-bible.md` | todo |
 | I-02 | Instinct | **Instinct** | Settle and drown cues through `followerCue(type, pan)`, once B-06 is agreed | `src/audio/**` | blocked (B-06) |
-| F-01 | Forge | Codex | `node:test` harness and tests for rng, noise and world | `package.json`, `tests/**` | todo |
+| F-01 | Forge | Codex | `node:test` harness and tests for rng, noise and world | `package.json`, `tests/**` | review |
 | F-02 | Forge | Codex | GitHub Actions: run `npm test` on every PR and on pushes to main | `.github/workflows/ci.yml` | todo |
 | F-03 | Forge | Codex | Benchmark script for world generation and brush; record in the log | `tools/bench.mjs` | todo |
 | F-04 | Gameplay | Codex | Followers system, following `docs/CONTRACTS.md` exactly | `src/gameplay/followers.js`, `tests/followers.test.mjs` | todo |
