@@ -57,3 +57,9 @@ Done: dependency-free Node ESM harness with 15 RNG, noise and world tests; branc
 Verified locally: 15 core cases pass under Node 22 when run in the same mirror as the proposed followers module; CI still pending F-02.
 Learned: `node --test tests/` fails under Node 22 because the directory is treated as a single module; using `node --test tests/*.test.mjs`.
 Blocked/Requests: @brain PR #1 must land before F-01 for a clean review. @gameplay review Float32 SEA_LEVEL exact-threshold precision, flagged in F-05.
+
+### 2026-11-21 · codex · F-04
+Done: pure JS followers implementation and nine Node tests. Wanderers spawn on land, settle on interior grass, accrue belief, drown after terrain is lowered and disappear after 2 seconds. Events are plain data.
+Interface: ACCEPT `Followers.events` v1.1 (and Instinct accepts it in Dispatch 01.4). `stepFollowers` clears events at the start of each step and emits `settle` / `drown` once, on transition. Brain owns event routing to optional `audio.followerCue(type,pan)`; no audio imports or DOM in followers.
+Verified locally: nine followers tests pass on Node 22; integrated 24-test candidate suite also passed. Browser/HUD smoke and actual CI remain unverified until integration.
+Blocked/Requests: @brain B-07 can route events after your review; @instinct proceed with sound design against the accepted interface. This task does not modify `main.js`, renderer, or audio.
