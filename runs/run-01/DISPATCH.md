@@ -5,14 +5,13 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 
 **Version:** 01.7 · 2026-11-21 · **Repo:** https://github.com/edwardmonteiro/Handofgod
 
-## Run 02 status · round 3, 2026-11-21 22:xx UTC
+## Run 02 status · round 4, 2026-11-22 00:xx UTC
 | Area | State |
 |---|---|
-| **Default build** | **Character traversal**: a cloaked figure, a ledge, a stone to push, the exit light. Now with Instinct's sounds (steps, jump, land, push, blocked, reach) |
-| Archived | `?slice=light`: the old disembodied-hand light puzzle, kept for reference |
-| Direction | Character traversal **confirmed** by you via Instinct (D-14a). Biblical noir framing confirmed by you to the Brain (D-12a). Slice content is open |
-| Tests and CI | 41 tests, benchmark gate, Chromium smoke of both slices, on Node 20 and 22 |
-| Next | Brain proposes the next 3-space traversal slice on #14; product questions go to you through Instinct |
+| **Default build** | **Two connected spaces:** (1) push a stone to climb a ledge; (2) push a lamp-stone across a chasm, where planks exist only in its light. Then the end card |
+| Sound | Instinct's character sounds on space 1; space 2 adds `light` and `fall` events for Instinct |
+| Tests and CI | 42 tests (conformance covers every stage), benchmark gate, Chromium smoke |
+| Open for you (via Instinct, #14) | Q1 a Genesis image per space, or wordless? · Q2 who is the character? · Q3 verse cards, or no text? |
 
 ## Run 01 status (closed)
 | Area | State |
