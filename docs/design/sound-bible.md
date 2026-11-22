@@ -38,3 +38,13 @@ This is a review candidate for the confirmed character/traversal experience, not
 - Finite pan clamps to [-1,1], strength to [0,1]; invalid strength drops the event. Muted/suspended/pre-unlock/wrong-scene events drop, without queues or implicit resume. Each type has a gap. Five concurrent ordinary voices, one reserved completion slot; mono fallback and ended-node cleanup. Dispose clears voice/timing tracking; rebuild restores the selected scene.
 - `push` is an onset cue under the current contract, not continuous scraping. `blocked` inherits gameplay cooldown plus an audio gap. Audio alone does not establish obstacle readability. The current automatic keyboard path does not emit blocked, so that event has only mocked/render coverage so far.
 - Candidate checks: 35/35 Node tests, including 3 new traversal audio tests. Native Chrome OfflineAudioContext eight-second sequence and burst renders had zero clipped samples, highest measured peak about -11.3 dBFS. This is not universal/true-peak assurance. Browser traversal with real input and AudioContext completed and emitted actual step/push/jump/land/reach voices. No physical device listening, Safari, mobile latency, realistic Foley or final timbre approval is claimed.
+
+
+## I-06: neutral light-bridge feedback candidate
+
+The second traversal space shares scene('traverse') through meta.scene. No new narrative or musical theme is implied. Two synthetic functional sketches extend the existing voice pool:
+
+- light: a quiet 330 to 440 Hz sine, 180 ms, minimum 450 ms gap. Signals newly lit solid planks, not every frame or a continuous light bed. Strength follows the stage's lit-share value.
+- fall: a low 140 to 42 Hz triangle, 380 ms, minimum 800 ms gap. The stage emits this at void respawn, not at the start of falling. This is a reset cue, not a voiced death effect.
+
+Both use the existing traversal-only gate, no implicit unlock/resume, mute/suspend drops, clamped pan/strength, five ordinary voice slots and cleanup. Reach retains its sixth reserved slot. Bursts are dropped with no queue. Push remains onset-only, not a continuous scrape. These remain procedural sketches, not final timbre, physical-listening or mobile approval.
