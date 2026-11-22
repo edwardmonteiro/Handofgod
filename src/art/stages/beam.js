@@ -7,6 +7,9 @@ import { drawHero, hills } from './traverse.js';
 
 const GROUND_Y = 0.7;
 let camX = null;
+let seenFalls = 0;
+let fallFade = 0;     // 1 → 0 after a respawn: a brief dip to black so the reset doesn't snap
+let lastTime = 0;
 
 export function drawStage(ctx, state, view, time) {
   const { w, h, dpr } = view;
@@ -85,5 +88,20 @@ export function drawStage(ctx, state, view, time) {
   if (state.resolve > 0) {
     ctx.fillStyle = grey(NOIR.divine, Math.min(0.85, state.resolve * 0.9));
     ctx.fillRect(0, 0, w, h);
+  }
+
+  // Respawn fade
+  const dt = Math.max(0, Math.min(0.1, time - lastTime));
+  lastTime = time;
+  if ((state.falls || 0) < seenFalls) seenFalls = 0; // a new stage instance
+  if ((state.falls || 0) > seenFalls) {
+    seenFalls = state.falls;
+    fallFade = 1;
+    camX = null; // snap the camera back with the hero
+  }
+  if (fallFade > 0) {
+    ctx.fillStyle = grey(0, Math.min(1, fallFade * 1.3));
+    ctx.fillRect(0, 0, w, h);
+    fallFade = Math.max(0, fallFade - dt / 0.6);
   }
 }

@@ -31,3 +31,4 @@
 | F-12 | Forge | Codex | Tests for `beam.js`: crossing with the lamp completes; no crossing without it; stepping out of the light falls and respawns; events | `tests/stages/beam.test.mjs` | todo |
 | I-06 | Instinct | Instinct | Light-bridge `light` and void-reset `fall` cues (PR #27) | `src/audio/**`, `tests/audio/**` | done |
 | A-07 | Art | Claude Code | **Character redraw after owner feedback** (#14, "deformed and square-like"): jointed human figure, idle, walk, push and jump poses, both spaces | `src/art/stages/traverse.js` (shared by `beam`) | done (review by Instinct; proof in `docs/design/proof/a07-character/`) |
+| A-08 | Art | Claude Code | Character polish after Instinct's A-07 review: idle stance (no limb overlap), walk bob and knee lift; respawn fade in space 2 | `src/art/stages/traverse.js`, `src/art/stages/beam.js` | done |

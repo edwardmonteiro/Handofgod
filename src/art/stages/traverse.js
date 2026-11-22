@@ -103,7 +103,8 @@ export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   const breathe = moving || air ? 0 : Math.sin(time * 2.2) * 0.006 * H;
 
   // Skeleton (y up from the feet, in pixels; x forward)
-  const hipY = 0.5 * H + breathe * 0.5;
+  const bob = moving ? -Math.abs(Math.sin(p)) * 0.022 * H + 0.011 * H : 0; // dips at full stride, rises when the legs pass
+  const hipY = 0.5 * H + breathe * 0.5 + bob;
   const lean = pushing ? 0.24 : moving ? 0.07 : 0;          // forward lean of the torso, radians
   const torsoLen = 0.31 * H;
   const shoulder = { x: Math.sin(lean) * torsoLen, y: hipY + Math.cos(lean) * torsoLen + breathe };
@@ -125,12 +126,12 @@ export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
     armA = [0.2, 1.3];  armB = [0.3, 1.2]; // elbows tucked low, forearms level: palms on the object's face
   } else if (moving) {
     const s = Math.sin(p);
-    legA = [s * 0.5, -Math.max(0, Math.cos(p)) * 0.75 - 0.08];
-    legB = [-s * 0.5, -Math.max(0, -Math.cos(p)) * 0.75 - 0.08];
-    armA = [-s * 0.45, 0.35];  armB = [s * 0.45, 0.35];
+    legA = [s * 0.48, -Math.max(0, Math.cos(p)) * 0.8 - 0.06 - Math.max(0, -s) * 0.18];
+    legB = [-s * 0.48, -Math.max(0, -Math.cos(p)) * 0.8 - 0.06 - Math.max(0, s) * 0.18];
+    armA = [-s * 0.42, 0.3 + Math.max(0, s) * 0.25];  armB = [s * 0.42, 0.3 + Math.max(0, -s) * 0.25]; // forearm bends more on the forward swing
   } else {
-    legA = [0.04, -0.04];  legB = [-0.06, -0.02];
-    armA = [0.08 + breathe * 0.01, 0.12];  armB = [-0.06, 0.1];
+    legA = [0.11, -0.05];  legB = [-0.13, 0.02];   // feet apart: both legs read in silhouette
+    armA = [0.16 + breathe * 0.01, 0.22];  armB = [-0.2, 0.14];   // arms slightly off the torso, gentle elbow bend
   }
 
   const thigh = 0.25 * H, shin = 0.25 * H, upperArm = 0.17 * H, foreArm = 0.165 * H;
