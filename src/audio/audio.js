@@ -19,6 +19,8 @@ const STAGE_CUES = {
         push: [72, 45, 0.28, 0.045, 'triangle', 0.35],
         blocked: [140, 100, 0.12, 0.032, 'sine', 0.8],
         reach: [220, 330, 0.7, 0.05, 'sine', 1.5],
+        light: [330, 440, 0.18, 0.024, 'sine', 0.45],
+        fall: [140, 42, 0.38, 0.045, 'triangle', 0.8],
 };
 
 export function createAudio() {
