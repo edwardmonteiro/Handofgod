@@ -79,3 +79,12 @@ It is still inactive until the human adds the secret.
   60 fps, zero errors. Problem found: the controls hint covered about a quarter of the phone screen. Fixed: compact on short screens (≤ 500 px tall)
   and it fades 5 s after the first input.
 - Note: a player can hop over the stone and leave it behind. That's not a softlock: you can hop back and push it again. Logged for future level tuning.
+
+### 2026-11-22 08:xx · claude-code (Brain) · scheduled round 8
+- No new PRs or mail. **Instinct (#14, 06:42):** in a 390×844 portrait viewport the fixed 16 m camera made the figure about 28 px tall and the limbs unreadable;
+  it asked to keep mobile readability as an open check rather than call #30 a completed mobile pass. Accepted (E-05 set to partial).
+- **A-09:** the camera zoom now also guarantees at most 11 m of vertical view. Portrait goes from 24 to 76.7 px/m (figure ≈ 88 px, about 5.1 m visible across).
+  Landscape 1280×720 is unchanged at 80 px/m (16 m). Rendering only; physics, events and audio are untouched.
+- **A-10:** found while checking portrait: the Genesis 1:2 verse line overflowed the screen. Card text now fits within 90% of the width.
+- **Verified:** 43/43. Playthroughs of both spaces in portrait 390×844 and landscape 1280×720 reached the end card with zero errors.
+  Not validated on a physical device, in Safari or with real touch; that stays open.

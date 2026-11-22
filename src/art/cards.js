@@ -24,8 +24,13 @@ export function drawCard(ctx, view, card) {
   ctx.fillText(spaced(card.kicker.toUpperCase()), w / 2, h * 0.36);
 
   // Main lines, word by word
-  const size = Math.round(unit * (card.big ? 0.075 : 0.042));
-  ctx.font = `${card.big ? '' : 'italic '}${size}px Georgia, 'Times New Roman', serif`;
+  // Fit the widest line into 90% of the screen width (portrait phones), never larger than the design size.
+  const style = card.big ? '' : 'italic ';
+  let size = Math.round(unit * (card.big ? 0.075 : 0.042));
+  ctx.font = `${style}${size}px Georgia, 'Times New Roman', serif`;
+  const widest = Math.max(...card.lines.map((l) => ctx.measureText(l).width));
+  if (widest > w * 0.9) size = Math.floor((size * w * 0.9) / widest);
+  ctx.font = `${style}${size}px Georgia, 'Times New Roman', serif`;
   let wordIndex = 0;
   card.lines.forEach((line, li) => {
     const words = line.split(' ');
@@ -45,7 +50,7 @@ export function drawCard(ctx, view, card) {
 
   // Secondary language line(s)
   if (card.sub) {
-    ctx.font = `${Math.round(unit * 0.026)}px Georgia, 'Times New Roman', serif`;
+    ctx.font = `${fitSize(ctx, card.sub, Math.round(unit * 0.026), w)}px Georgia, 'Times New Roman', serif`;
     const appear = Math.max(0, Math.min(1, (card.t - wordIndex * WORD_DELAY - 0.3) / 0.8));
     card.sub.forEach((line, i) => {
       ctx.fillStyle = grey(NOIR.lit, appear * 0.6 * fadeOut);
@@ -55,12 +60,19 @@ export function drawCard(ctx, view, card) {
 
   // Hint
   if (card.hint && card.t > 2) {
-    ctx.font = `${Math.round(unit * 0.018)}px Georgia, 'Times New Roman', serif`;
+    ctx.font = `${fitSize(ctx, [card.hint], Math.max(Math.round(unit * 0.018), Math.round(11 * (dpr || 1))), w)}px Georgia, 'Times New Roman', serif`;
     ctx.fillStyle = grey(NOIR.mid, (0.5 + 0.3 * Math.sin(card.t * 2)) * fadeOut);
     ctx.fillText(card.hint, w / 2, h * 0.86);
   }
   ctx.restore();
   void dpr;
+}
+
+/** Largest font size <= base at which every line fits in 90% of the width. */
+function fitSize(ctx, lines, base, w) {
+  ctx.font = `${base}px Georgia, 'Times New Roman', serif`;
+  const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
+  return widest > w * 0.9 ? Math.floor((base * w * 0.9) / widest) : base;
 }
 
 function spaced(text) {

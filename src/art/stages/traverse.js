@@ -13,8 +13,9 @@ let camX = null;
 export function drawStage(ctx, state, view, time) {
   const { w, h, dpr } = view;
   const { level, hero, block } = state;
-  const scale = w / level.viewW;                 // pixels per metre
-  const targetCam = Math.max(0, Math.min(level.w - level.viewW, hero.x - level.viewW * 0.4));
+  const scale = cameraScale(w, h, level.viewW);   // pixels per metre (portrait zooms in, see cameraScale)
+  const visW = w / scale;                          // metres visible across
+  const targetCam = Math.max(0, Math.min(level.w - visW, hero.x - visW * 0.4));
   camX = camX === null ? targetCam : camX + (targetCam - camX) * 0.08; // smooth follow
   const sx = (x) => (x - camX) * scale;
   const sy = (y) => h * GROUND_Y - y * scale;
@@ -92,6 +93,14 @@ export function drawStage(ctx, state, view, time) {
 // No specific identity or costume is implied. Physics box unchanged (hero.w × hero.h).
 const NEAR = 0.012;  // near-side limbs and body (silhouette black)
 const FAR = 0.085;   // far-side limbs: one step lighter, so arms and legs separate from the body
+
+// Camera zoom (A-09): landscape shows level.viewW metres across, as before. Narrow or portrait screens would shrink
+// the figure to ~28 px (Instinct, #14), so the zoom also guarantees that at most MIN_VIEW_H metres are visible vertically.
+// Rendering only: physics, events and audio are untouched.
+export const MIN_VIEW_H = 11;
+export function cameraScale(w, h, viewW) {
+  return Math.max(w / viewW, h / MIN_VIEW_H);
+}
 
 export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   const H = hero.h * scale;

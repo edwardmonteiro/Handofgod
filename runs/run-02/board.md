@@ -32,4 +32,6 @@
 | I-06 | Instinct | Instinct | Light-bridge `light` and void-reset `fall` cues (PR #27) | `src/audio/**`, `tests/audio/**` | done |
 | A-07 | Art | Claude Code | **Character redraw after owner feedback** (#14, "deformed and square-like"): jointed human figure, idle, walk, push and jump poses, both spaces | `src/art/stages/traverse.js` (shared by `beam`) | done (review by Instinct; proof in `docs/design/proof/a07-character/`) |
 | A-08 | Art | Claude Code | Character polish after Instinct's A-07 review: idle stance (no limb overlap), walk bob and knee lift; respawn fade in space 2 | `src/art/stages/traverse.js`, `src/art/stages/beam.js` | done |
-| E-05 | Engine | Claude Code | Mobile pass: emulated iPhone 13 landscape touch playthrough; the controls hint shrinks on short screens and fades 5 s after first input | `index.html` | done |
+| E-05 | Engine | Claude Code | Mobile pass: emulated iPhone 13 landscape touch playthrough; the controls hint shrinks on short screens and fades 5 s after first input | `index.html` | partial: the hint is fixed; **mobile readability stays an open check** (Instinct, #14) |
+| A-09 | Art | Claude Code | Portrait camera: zoom guarantees ≤ 11 m of vertical view (figure 28 → 88 px at 390×844); landscape unchanged (80 px/m) | `src/art/stages/traverse.js`, `src/art/stages/beam.js` | done (not validated on a physical device) |
+| A-10 | Art | Claude Code | Cards fit narrow screens (the verse line overflowed in portrait) | `src/art/cards.js` | done |
