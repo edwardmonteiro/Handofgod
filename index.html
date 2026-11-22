@@ -13,12 +13,28 @@
       font: 13px/1.5 Georgia, 'Times New Roman', serif; color: #b8b8b8;
       background: rgba(0, 0, 0, 0.55); border-radius: 6px; pointer-events: none;
     }
-    @media (max-width: 600px) { #help { font-size: 11px; left: 12px; right: auto; } }
+    #help { transition: opacity 1.2s ease; }
+    #help.faded { opacity: 0; }
+    @media (max-width: 600px), (max-height: 500px) { #help { font-size: 11px; padding: 6px 10px; left: 12px; right: auto; max-width: 60vw; } }
   </style>
 </head>
 <body>
   <canvas id="game" aria-label="A Mão de Deus: Hand of God"></canvas>
   <p id="help">← → or A D: walk · Space: jump · Touch: hold the sides to walk, tap the middle to jump<br>M: mute · `: stats</p>
   <script type="module" src="src/main.js"></script>
+  <script>
+    // The controls hint fades a few seconds after the first input, so it never covers the game on small screens.
+    (function () {
+      var help = document.getElementById('help');
+      var armed = false;
+      function arm() {
+        if (armed) return;
+        armed = true;
+        setTimeout(function () { help.classList.add('faded'); }, 5000);
+      }
+      window.addEventListener('pointerdown', arm, { once: true });
+      window.addEventListener('keydown', arm, { once: true });
+    })();
+  </script>
 </body>
 </html>
