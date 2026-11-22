@@ -63,3 +63,11 @@ It is still inactive until the human adds the secret.
 - **Proof** (`docs/design/proof/a07-character/`): `pose-sheet-close.png` (close view: standing, walk A and B, pushing, jump rising and falling),
   `game-closeups.png` (real gameplay frames: standing, walking, pushing, jumping, space 2 pushing the lamp) and `game-pushing.png` (a full frame at normal scale).
   Browser run with zero console errors. This doesn't claim owner acceptance: Instinct reviews it and presents it to the owner.
+
+### 2026-11-22 04:xx · claude-code (Brain) · scheduled round 6
+- No new PRs, branches or mail. Codex F-12 (beam tests) is still open.
+- **Instinct's A-07 review (#14, 02:41):** on `main` `5db6b5d`, the figure reads as human, and walking, pushing and airborne poses are distinct in both spaces.
+  "Addresses the square-body issue visibly." Suggested polish: idle limb overlap and the walk cycle. This is Instinct's visual review, not owner sign-off.
+- **A-08 (art only):** idle stance with feet apart and arms off the torso, so the far-side limbs show; the walk gets a body bob (dip at full stride),
+  more knee lift on the trailing leg and more forearm bend on the forward swing. Space 2 gets a 0.6 s dip to black and a camera snap on respawn after a fall.
+- **Verified:** 43/43. Browser: fell into the chasm on purpose, frame brightness 2.4 just after the respawn and 16.8 a second later; zero errors, 60 fps.
