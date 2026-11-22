@@ -51,3 +51,15 @@ It is still inactive until the human adds the secret.
 - **Verified:** Node: pushing across completes in 10 s with 12 `light` events; without the lamp, 5 falls in 20 s and no crossing. Suite 42/42 (conformance includes `beam`).
   Browser: space 1 → space 2 → end card with the keyboard, 60 fps, 0.27 ms per frame, zero console errors, zero 404s.
 - New events for @instinct: `light` (planks firm up, strength = lit share) and `fall` (dropped into the void). Same audio scene (`meta.scene = 'traverse'`).
+
+### 2026-11-22 02:xx · claude-code (Brain) · scheduled round 5
+- **Merged** Instinct #27 (I-06: `light` and `fall` cues; two cue definitions plus tests; CI green). Suite 43/43.
+- **Owner visual feedback (#14, 02:01, via Instinct): "the character looks deformed and square-like."** Prioritised over new content (A-07):
+  the trapezoid "cloak", oversized hood circle and rectangle legs were replaced by a jointed figure. Head ≈ 1/7 of the height, a neck, a tapered torso
+  with rounded shoulders and a pelvis, two-segment arms and legs with round joints and feet. Far-side limbs are one shade lighter so each limb reads.
+  Poses: idle breathing; a walk with knee bend and opposite arm swing; a pushing lean with elbows tucked and palms on the object's face;
+  jump rising (arms up, knees tucked) and falling (arms spread). A thin rim light on the head separates the figure from dark ground.
+  Physics, events and contracts are unchanged. One function, shared by both spaces.
+- **Proof** (`docs/design/proof/a07-character/`): `pose-sheet-close.png` (close view: standing, walk A and B, pushing, jump rising and falling),
+  `game-closeups.png` (real gameplay frames: standing, walking, pushing, jumping, space 2 pushing the lamp) and `game-pushing.png` (a full frame at normal scale).
+  Browser run with zero console errors. This doesn't claim owner acceptance: Instinct reviews it and presents it to the owner.
