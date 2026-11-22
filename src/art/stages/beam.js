@@ -3,7 +3,7 @@
 // The lamp-stone is the key light of the scene.
 
 import { grey, NOIR } from '../palette.js';
-import { drawHero, hills } from './traverse.js';
+import { drawHero, hills, cameraScale } from './traverse.js';
 
 const GROUND_Y = 0.7;
 let camX = null;
@@ -14,9 +14,10 @@ let lastTime = 0;
 export function drawStage(ctx, state, view, time) {
   const { w, h, dpr } = view;
   const { level, hero, lamp } = state;
-  const scale = w / level.viewW;
-  const target = Math.max(0, Math.min(level.w - level.viewW, hero.x - level.viewW * 0.4));
-  camX = camX === null || Math.abs(target - camX) > level.viewW ? target : camX + (target - camX) * 0.08;
+  const scale = cameraScale(w, h, level.viewW);
+  const visW = w / scale;
+  const target = Math.max(0, Math.min(level.w - visW, hero.x - visW * 0.4));
+  camX = camX === null || Math.abs(target - camX) > visW ? target : camX + (target - camX) * 0.08;
   const sx = (x) => (x - camX) * scale;
   const sy = (y) => h * GROUND_Y - y * scale;
 
