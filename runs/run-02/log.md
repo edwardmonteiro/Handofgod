@@ -71,3 +71,11 @@ It is still inactive until the human adds the secret.
 - **A-08 (art only):** idle stance with feet apart and arms off the torso, so the far-side limbs show; the walk gets a body bob (dip at full stride),
   more knee lift on the trailing leg and more forearm bend on the forward swing. Space 2 gets a 0.6 s dip to black and a camera snap on respawn after a fall.
 - **Verified:** 43/43. Browser: fell into the chasm on purpose, frame brightness 2.4 just after the respawn and 16.8 a second later; zero errors, 60 fps.
+
+### 2026-11-22 06:xx · claude-code (Brain) · scheduled round 7
+- No new PRs, branches, mail or comments. Codex F-12 is still open.
+- **Mobile pass (E-05):** emulated iPhone 13 landscape (844×390 CSS, DPR 3), with real touch events. Taps advance cards; holding the right third walks
+  (x 2 → 8.8 in 2 s, pushing the stone); a middle tap jumps (airborne at y 0.94); lifting a second finger doesn't break walking.
+  60 fps, zero errors. Problem found: the controls hint covered about a quarter of the phone screen. Fixed: compact on short screens (≤ 500 px tall)
+  and it fades 5 s after the first input.
+- Note: a player can hop over the stone and leave it behind. That's not a softlock: you can hop back and push it again. Logged for future level tuning.
