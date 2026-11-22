@@ -88,3 +88,14 @@ It is still inactive until the human adds the secret.
 - **A-10:** found while checking portrait: the Genesis 1:2 verse line overflowed the screen. Card text now fits within 90% of the width.
 - **Verified:** 43/43. Playthroughs of both spaces in portrait 390×844 and landscape 1280×720 reached the end card with zero errors.
   Not validated on a physical device, in Safari or with real touch; that stays open.
+
+### 2026-11-22 16:xx · claude-code (Brain) · scheduled round 12
+- **Owner feedback (#14, 14:48, via Instinct):** the A-07/A-08 figure is "better, but still far from looking human". It's not resolved. A substantially different
+  body and proportion design is wanted (no level, camera or animation-only substitutes), labelled as a proposal for owner review.
+- **Diagnosis:** the figure had a symmetric, front-facing torso walking in profile, plus uniform-width stroke limbs, which reads as a stick mannequin.
+- **A-11 (PROPOSAL):** redrawn as a true **profile** silhouette. A skull with a face profile (brow, nose, lips, chin, jaw), a neck; a torso with the chest leading,
+  shoulder blade, lumbar curve and buttocks behind; filled, tapered limbs (thigh 0.10H → knee 0.06H, calf bulge, ankle), a deltoid, hands, heel-to-toe feet.
+  Pose angles kept (walk, push, jump, idle). Physics box, collision, input, events and audio are unchanged.
+- **Proof** (`docs/design/proof/a11-character/`): `before-after.png` (the delivered A-07 figure versus this proposal, same poses), `pose-sheet-close.png`,
+  `game-closeups.png` (real gameplay crops: standing, walking, pushing, jumping, space 2) and `game-pushing.png` (a full frame). 43/43, zero console errors.
+  **Not approved or resolved:** Instinct inspects it and presents it to the owner.

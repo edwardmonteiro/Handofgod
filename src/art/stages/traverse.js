@@ -86,21 +86,15 @@ export function drawStage(ctx, state, view, time) {
   }
 }
 
-// A-07 (Run 02): the character redrawn after owner feedback relayed on #14 ("deformed and square-like").
-// A jointed figure: human proportions (head ≈ 1/7 of the height), two-segment arms and legs with round joints,
-// far-side limbs a shade lighter so each limb reads separately, and a pose per state: idle breathing, a walk cycle
-// with knee bend and opposite arm swing, a pushing lean with both hands forward, and a tucked jump.
-// No specific identity or costume is implied. Physics box unchanged (hero.w × hero.h).
+// A-11 (Run 02) · PROPOSAL for owner review: a true side-view human silhouette, after the owner's feedback relayed on #14
+// (14:48 UTC, 2026-11-22): the A-07/A-08 figure was "better, but still far from looking human". It read as a stick mannequin:
+// a symmetric front-facing torso walking in profile, with uniform-width stroke limbs.
+// This version is drawn in profile throughout: a skull with a face profile (brow, nose, lips, chin, jaw), a chest that leads
+// with the shoulder blade, lumbar curve and buttocks behind, tapered limbs (thigh → knee, calf bulge → ankle), hands, and
+// heel-to-toe feet. Pose angles (walk, push, jump, idle) are kept from A-07/A-08.
+// Physics box, collision, input, events and audio are unchanged. No identity, costume or age is implied.
 const NEAR = 0.012;  // near-side limbs and body (silhouette black)
-const FAR = 0.085;   // far-side limbs: one step lighter, so arms and legs separate from the body
-
-// Camera zoom (A-09): landscape shows level.viewW metres across, as before. Narrow or portrait screens would shrink
-// the figure to ~28 px (Instinct, #14), so the zoom also guarantees that at most MIN_VIEW_H metres are visible vertically.
-// Rendering only: physics, events and audio are untouched.
-export const MIN_VIEW_H = 11;
-export function cameraScale(w, h, viewW) {
-  return Math.max(w / viewW, h / MIN_VIEW_H);
-}
+const FAR = 0.085;   // far-side limbs: one step lighter so they separate from the body
 
 export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   const H = hero.h * scale;
@@ -108,131 +102,175 @@ export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   const air = !hero.grounded;
   const pushing = !!hero.pushing && !air;
   const moving = Math.abs(hero.vx || 0) > 0.05 && !air;
-  const p = hero.walk || 0;                       // walk phase (advanced by the gameplay module)
+  const p = hero.walk || 0;
   const breathe = moving || air ? 0 : Math.sin(time * 2.2) * 0.006 * H;
+  const bob = moving ? -Math.abs(Math.sin(p)) * 0.02 * H + 0.01 * H : 0;
+  const lean = pushing ? 0.26 : moving ? 0.06 : 0;
+  const hip = { x: 0, y: 0.49 * H + breathe * 0.5 + bob };
+  const cl = Math.cos(lean), sl = Math.sin(lean);
+  // Torso-local point (units of H, relative to the hip, x forward, y up) -> rotated by the lean -> pixels
+  const T = (lx, ly) => ({ x: hip.x + (lx * cl + ly * sl) * H, y: hip.y + (-lx * sl + ly * cl) * H + (ly > 0.15 ? breathe : 0) });
 
-  // Skeleton (y up from the feet, in pixels; x forward)
-  const bob = moving ? -Math.abs(Math.sin(p)) * 0.022 * H + 0.011 * H : 0; // dips at full stride, rises when the legs pass
-  const hipY = 0.5 * H + breathe * 0.5 + bob;
-  const lean = pushing ? 0.24 : moving ? 0.07 : 0;          // forward lean of the torso, radians
-  const torsoLen = 0.31 * H;
-  const shoulder = { x: Math.sin(lean) * torsoLen, y: hipY + Math.cos(lean) * torsoLen + breathe };
-  const neckLen = 0.045 * H;
-  const headR = 0.072 * H;
-  const head = { x: shoulder.x + Math.sin(lean) * (neckLen + headR), y: shoulder.y + Math.cos(lean) * (neckLen + headR) };
-
-  // Limb angles, measured from straight down; positive = forward
-  let legA, legB, armA, armB; // [upper, lower] for near (A) and far (B)
+  // ---- Limb angles (from straight down; positive = forward), as in A-07/A-08 ----
+  let legA, legB, armA, armB;
   if (air) {
     const rising = (hero.vy || 0) > 0;
     legA = [0.75, -1.25];  legB = [0.25, -0.85];
-    armA = rising ? [2.5, 0.25] : [1.55, 0.35];   // rising: arms up; falling: spread for balance
+    armA = rising ? [2.5, 0.25] : [1.55, 0.35];
     armB = rising ? [2.2, 0.3] : [-1.2, -0.3];
   } else if (pushing) {
     const s = Math.sin(p);
     legA = [-0.2 + s * 0.35, -0.15 - Math.max(0, -Math.cos(p)) * 0.5];
     legB = [-0.2 - s * 0.35, -0.15 - Math.max(0, Math.cos(p)) * 0.5];
-    armA = [0.2, 1.3];  armB = [0.3, 1.2]; // elbows tucked low, forearms level: palms on the object's face
+    armA = [-0.15, 1.6];  armB = [-0.05, 1.5];   // elbows down, forearms level: palms land on the object's face
   } else if (moving) {
     const s = Math.sin(p);
     legA = [s * 0.48, -Math.max(0, Math.cos(p)) * 0.8 - 0.06 - Math.max(0, -s) * 0.18];
     legB = [-s * 0.48, -Math.max(0, -Math.cos(p)) * 0.8 - 0.06 - Math.max(0, s) * 0.18];
-    armA = [-s * 0.42, 0.3 + Math.max(0, s) * 0.25];  armB = [s * 0.42, 0.3 + Math.max(0, -s) * 0.25]; // forearm bends more on the forward swing
+    armA = [-s * 0.42, 0.3 + Math.max(0, s) * 0.25];  armB = [s * 0.42, 0.3 + Math.max(0, -s) * 0.25];
   } else {
-    legA = [0.11, -0.05];  legB = [-0.13, 0.02];   // feet apart: both legs read in silhouette
-    armA = [0.16 + breathe * 0.01, 0.22];  armB = [-0.2, 0.14];   // arms slightly off the torso, gentle elbow bend
+    legA = [0.09, -0.05];  legB = [-0.1, 0.02];
+    armA = [0.1 + breathe * 0.01, 0.18];  armB = [-0.12, 0.12];
   }
-
-  const thigh = 0.25 * H, shin = 0.25 * H, upperArm = 0.17 * H, foreArm = 0.165 * H;
-  const legW = 0.088 * H, armW = 0.068 * H;   // slightly heavy so limbs read at gameplay scale (~90 px tall)
-  const hipNear = { x: 0.012 * H, y: hipY };
-  const hipFar = { x: -0.012 * H, y: hipY };
 
   ctx.save();
   ctx.translate(x + W / 2, y);
-  ctx.scale(hero.facing < 0 ? -1 : 1, -1);   // y up, facing to +x
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+  ctx.scale(hero.facing < 0 ? -1 : 1, -1);   // y up, facing +x
 
-  // Far side first: one shade lighter
-  limb(ctx, hipFar, legB, thigh, shin, legW, FAR, lean * 0.15);
-  foot(ctx, hipFar, legB, thigh, shin, legW, FAR);
-  limb(ctx, shoulder, armB, upperArm, foreArm, armW, FAR, lean);
+  const shoulder = T(0.0, 0.3);
+  const hipNear = { x: hip.x + 0.006 * H, y: hip.y };
+  const hipFar = { x: hip.x - 0.01 * H, y: hip.y };
 
-  // Body: a tapered torso along the spine (hips < waist-to-chest taper < rounded shoulders)
-  const sp = (t, off) => ({
-    x: hipNear.x + Math.sin(lean) * torsoLen * t + Math.cos(lean) * off,
-    y: hipY + Math.cos(lean) * torsoLen * t - Math.sin(lean) * off,
-  });
-  const P = [ // [t along the spine, half-width]
-    [0, 0.072], [0.3, 0.064], [0.72, 0.092], [0.93, 0.1],
-  ];
+  // Far side (lighter), behind the body
+  leg(ctx, hipFar, legB, H, FAR);
+  arm(ctx, shoulder, armB, H, FAR);
+
+  // ---- Torso in profile -------------------------------------------------------------
   ctx.fillStyle = grey(NEAR);
-  ctx.beginPath();
-  let q = sp(P[0][0], -P[0][1] * H);
-  ctx.moveTo(q.x, q.y);
-  for (let i = 1; i < P.length; i++) { q = sp(P[i][0], -P[i][1] * H); ctx.lineTo(q.x, q.y); }
-  const top = sp(1.04, 0);
-  const r = sp(P[3][0], P[3][1] * H);
-  ctx.quadraticCurveTo(sp(1.05, -0.09 * H).x, sp(1.05, -0.09 * H).y, top.x, top.y);   // rounded left shoulder
-  ctx.quadraticCurveTo(sp(1.05, 0.09 * H).x, sp(1.05, 0.09 * H).y, r.x, r.y);         // rounded right shoulder
-  for (let i = P.length - 2; i >= 0; i--) { q = sp(P[i][0], P[i][1] * H); ctx.lineTo(q.x, q.y); }
-  ctx.closePath();
+  const body = [
+    T(0.03, 0.335), T(0.07, 0.27), T(0.074, 0.225), T(0.062, 0.17), T(0.05, 0.11), T(0.058, 0.035), T(0.03, -0.03),
+    T(-0.01, -0.045), T(-0.048, -0.025), T(-0.072, 0.03), T(-0.06, 0.09), T(-0.047, 0.14), T(-0.058, 0.21),
+    T(-0.066, 0.27), T(-0.045, 0.32), T(-0.02, 0.345),
+  ];
+  smoothClosed(ctx, body);
   ctx.fill();
-  // Pelvis: a rounded base so the legs grow out of it rather than a flat edge
-  ctx.beginPath();
-  ctx.ellipse(hipNear.x, hipY, 0.07 * H, 0.05 * H, -lean, 0, Math.PI * 2);
+
+  // ---- Neck and head (profile) ------------------------------------------------------
+  const neck = [T(-0.02, 0.34), T(0.026, 0.33), T(0.03, 0.37), T(-0.012, 0.378)];
+  smoothClosed(ctx, neck);
   ctx.fill();
-  // Neck and head
-  ctx.strokeStyle = grey(NEAR);
-  ctx.lineWidth = 0.05 * H;
-  ctx.beginPath();
-  ctx.moveTo(shoulder.x, shoulder.y);
-  ctx.lineTo(head.x - Math.sin(lean) * headR * 0.6, head.y - Math.cos(lean) * headR * 0.6);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.ellipse(head.x, head.y, headR * 0.92, headR, -lean, 0, Math.PI * 2);
+  const head = [
+    T(-0.03, 0.375), T(-0.05, 0.41), T(-0.045, 0.45), T(-0.015, 0.478), T(0.025, 0.482), T(0.055, 0.462),
+    T(0.066, 0.435), T(0.07, 0.418),   // brow
+    T(0.083, 0.398),                   // nose tip
+    T(0.071, 0.39), T(0.074, 0.378),   // under the nose, lips
+    T(0.068, 0.363), T(0.058, 0.352),  // chin
+    T(0.03, 0.352), T(0.01, 0.36),     // jaw to neck
+  ];
+  smoothClosed(ctx, head);
   ctx.fill();
 
   // Near side on top
-  limb(ctx, hipNear, legA, thigh, shin, legW, NEAR, lean * 0.15);
-  foot(ctx, hipNear, legA, thigh, shin, legW, NEAR);
-  limb(ctx, shoulder, armA, upperArm, foreArm, armW, NEAR, lean);
+  leg(ctx, hipNear, legA, H, NEAR);
+  arm(ctx, shoulder, armA, H, NEAR);
 
-  // Rim light on the back of the head and shoulder: separates the figure from dark ground, brighter near light
+  // Rim light along the back of the head and shoulders: separates the figure from dark ground, brighter near light
   ctx.strokeStyle = grey(NOIR.lit, 0.12 + 0.35 * lightNear);
-  ctx.lineWidth = Math.max(1, 0.012 * H);
+  ctx.lineWidth = Math.max(1, 0.01 * H);
+  ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.arc(head.x, head.y, headR * 0.98, Math.PI * 0.55 - lean, Math.PI * 1.05 - lean);
+  const rim = [T(-0.045, 0.45), T(-0.05, 0.41), T(-0.03, 0.375)];
+  ctx.moveTo(rim[0].x, rim[0].y);
+  for (const q of rim.slice(1)) ctx.lineTo(q.x, q.y);
+  ctx.moveTo(T(-0.045, 0.32).x, T(-0.045, 0.32).y);
+  ctx.lineTo(T(-0.066, 0.27).x, T(-0.066, 0.27).y);
   ctx.stroke();
   ctx.restore();
+  void time;
 }
 
-/** Two-segment limb from a joint, angles from straight down (positive = forward), y up. */
-function limb(ctx, root, [a1, a2], l1, l2, width, shade, lean) {
-  const k = { x: root.x + Math.sin(a1 + lean * 0) * l1, y: root.y - Math.cos(a1) * l1 };
-  const e = { x: k.x + Math.sin(a1 + a2) * l2, y: k.y - Math.cos(a1 + a2) * l2 };
-  ctx.strokeStyle = grey(shade);
-  ctx.lineWidth = width;
+/** A leg in profile: tapered thigh, knee, calf bulge, ankle and a heel-to-toe foot. Angles from down, positive = forward. */
+function leg(ctx, root, [a1, a2], H, shade) {
+  const thigh = 0.245 * H, shin = 0.25 * H;
+  const knee = { x: root.x + Math.sin(a1) * thigh, y: root.y - Math.cos(a1) * thigh };
+  const a = a1 + a2;
+  const ankle = { x: knee.x + Math.sin(a) * shin, y: knee.y - Math.cos(a) * shin };
+  // the calf bulges on the back of the shin
+  const calf = { x: knee.x + Math.sin(a) * shin * 0.33 - Math.cos(a) * 0.008 * H, y: knee.y - Math.cos(a) * shin * 0.33 - Math.sin(a) * 0.008 * H };
+  ctx.fillStyle = grey(shade);
+  seg(ctx, root, knee, 0.1 * H, 0.06 * H);
+  seg(ctx, knee, calf, 0.06 * H, 0.068 * H);
+  seg(ctx, calf, ankle, 0.068 * H, 0.034 * H);
+  // Foot: heel slightly behind the ankle, toe forward; tips onto the toe when the leg trails
+  const tip = Math.max(0, -a) * 0.6;
+  const fx = Math.cos(tip), fy = Math.sin(tip);
+  const heel = { x: ankle.x - 0.03 * H * fx, y: ankle.y - 0.016 * H - 0.03 * H * fy * 0 };
+  const toe = { x: ankle.x + 0.105 * H * fx, y: ankle.y - 0.022 * H - 0.105 * H * fy * 0.35 };
   ctx.beginPath();
-  ctx.moveTo(root.x, root.y);
-  ctx.lineTo(k.x, k.y);
-  ctx.lineTo(e.x, e.y);
-  ctx.stroke();
-  void lean;
-  return e;
+  ctx.moveTo(heel.x, heel.y + 0.035 * H);
+  ctx.lineTo(heel.x - 0.006 * H, heel.y);
+  ctx.lineTo(toe.x, toe.y);
+  ctx.lineTo(toe.x - 0.02 * H, toe.y + 0.022 * H);
+  ctx.lineTo(ankle.x + 0.012 * H, ankle.y + 0.012 * H);
+  ctx.closePath();
+  ctx.fill();
 }
 
-/** A small foot at the end of a leg, pointing forward. */
-function foot(ctx, root, [a1, a2], l1, l2, width, shade) {
-  const kx = root.x + Math.sin(a1) * l1, ky = root.y - Math.cos(a1) * l1;
-  const ax = kx + Math.sin(a1 + a2) * l2, ay = ky - Math.cos(a1 + a2) * l2;
-  ctx.strokeStyle = grey(shade);
-  ctx.lineWidth = width * 0.8;
+/** An arm in profile: deltoid, tapered upper arm and forearm, and a hand. */
+function arm(ctx, root, [a1, a2], H, shade) {
+  const upper = 0.175 * H, fore = 0.16 * H;
+  const elbow = { x: root.x + Math.sin(a1) * upper, y: root.y - Math.cos(a1) * upper };
+  const a = a1 + a2;
+  const wrist = { x: elbow.x + Math.sin(a) * fore, y: elbow.y - Math.cos(a) * fore };
+  ctx.fillStyle = grey(shade);
   ctx.beginPath();
-  ctx.moveTo(ax - width * 0.15, ay);
-  ctx.lineTo(ax + width * 1.0, ay - width * 0.05);
-  ctx.stroke();
+  ctx.arc(root.x, root.y - 0.008 * H, 0.04 * H, 0, Math.PI * 2); // deltoid
+  ctx.fill();
+  seg(ctx, root, elbow, 0.064 * H, 0.046 * H);
+  seg(ctx, elbow, wrist, 0.046 * H, 0.032 * H);
+  // Hand: a small tapered mitten continuing the forearm
+  const hand = { x: wrist.x + Math.sin(a) * 0.05 * H, y: wrist.y - Math.cos(a) * 0.05 * H };
+  seg(ctx, wrist, hand, 0.036 * H, 0.026 * H);
+}
+
+/** A filled tapered segment with round ends (widths are full widths). */
+function seg(ctx, a, b, wa, wb) {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len, ny = dx / len;
+  ctx.beginPath();
+  ctx.moveTo(a.x + nx * wa / 2, a.y + ny * wa / 2);
+  ctx.lineTo(b.x + nx * wb / 2, b.y + ny * wb / 2);
+  ctx.lineTo(b.x - nx * wb / 2, b.y - ny * wb / 2);
+  ctx.lineTo(a.x - nx * wa / 2, a.y - ny * wa / 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(a.x, a.y, wa / 2, 0, Math.PI * 2);
+  ctx.arc(b.x, b.y, wb / 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/** Smooth closed outline through points (quadratic curves via midpoints). */
+function smoothClosed(ctx, pts) {
+  const n = pts.length;
+  const mid = (i) => ({ x: (pts[i].x + pts[(i + 1) % n].x) / 2, y: (pts[i].y + pts[(i + 1) % n].y) / 2 });
+  ctx.beginPath();
+  const m0 = mid(n - 1);
+  ctx.moveTo(m0.x, m0.y);
+  for (let i = 0; i < n; i++) {
+    const m = mid(i);
+    ctx.quadraticCurveTo(pts[i].x, pts[i].y, m.x, m.y);
+  }
+  ctx.closePath();
+}
+
+// Camera zoom (A-09): landscape shows level.viewW metres across, as before. Narrow or portrait screens would shrink
+// the figure to ~28 px (Instinct, #14), so the zoom also guarantees that at most MIN_VIEW_H metres are visible vertically.
+// Rendering only: physics, events and audio are untouched.
+export const MIN_VIEW_H = 11;
+export function cameraScale(w, h, viewW) {
+  return Math.max(w / viewW, h / MIN_VIEW_H);
 }
 
 export function hills(ctx, w, h, offset, baseFrac, fill, scale, freq, amp) {
