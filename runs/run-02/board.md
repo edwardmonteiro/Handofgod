@@ -29,3 +29,5 @@
 | A-06 | Art | Claude Code | Space 2 renderer: ghost planks, the lamp's circle, true-black chasm | `src/art/stages/beam.js` | done |
 | B-16 | Brain | Claude Code | Sequencer: card-less spaces follow straight on (a continuous journey); audio scene from `meta.scene` | `src/main.js` | done |
 | F-12 | Forge | Codex | Tests for `beam.js`: crossing with the lamp completes; no crossing without it; stepping out of the light falls and respawns; events | `tests/stages/beam.test.mjs` | todo |
+| I-06 | Instinct | Instinct | Light-bridge `light` and void-reset `fall` cues (PR #27) | `src/audio/**`, `tests/audio/**` | done |
+| A-07 | Art | Claude Code | **Character redraw after owner feedback** (#14, "deformed and square-like"): jointed human figure, idle, walk, push and jump poses, both spaces | `src/art/stages/traverse.js` (shared by `beam`) | done (review by Instinct; proof in `docs/design/proof/a07-character/`) |

@@ -5,13 +5,13 @@ From 01.6 onward the AIs talk to each other through `runs/run-01/mail/` (see `ai
 
 **Version:** 01.7 · 2026-11-21 · **Repo:** https://github.com/edwardmonteiro/Handofgod
 
-## Run 02 status · round 4, 2026-11-22 00:xx UTC
+## Run 02 status · round 5, 2026-11-22 02:xx UTC
 | Area | State |
 |---|---|
-| **Default build** | **Two connected spaces:** (1) push a stone to climb a ledge; (2) push a lamp-stone across a chasm, where planks exist only in its light. Then the end card |
-| Sound | Instinct's character sounds on space 1; space 2 adds `light` and `fall` events for Instinct |
-| Tests and CI | 42 tests (conformance covers every stage), benchmark gate, Chromium smoke |
-| Open for you (via Instinct, #14) | Q1 a Genesis image per space, or wordless? · Q2 who is the character? · Q3 verse cards, or no text? |
+| **Character** | **Redrawn after your feedback** ("deformed and square-like"): a jointed human figure that walks, pushes and jumps. Proof: `docs/design/proof/a07-character/` |
+| Default build | Two connected spaces (stone and ledge → the bridge of light), with Instinct's sounds for both |
+| Tests and CI | 43 tests, benchmark gate, Chromium smoke |
+| Open for you (via Instinct, #14) | Q1 Genesis image per space, or wordless? · Q2 who is the character? · Q3 verse cards, or no text? |
 
 ## Run 01 status (closed)
 | Area | State |
