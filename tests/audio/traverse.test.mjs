@@ -57,3 +57,19 @@ test('stage voice limits reserve completion slot and drop bursts without queue',
  for(let i=0;i<100;i++)a.stageEvent('reach');assert.equal(ctx.nodes.length,base+18);
  ctx.currentTime=4;a.stageEvent('step');assert.equal(ctx.nodes.length,base+21);
 });
+
+test('beam cues are lazy, traversal-only, throttled, clamped and cleaned up',()=>{
+ reset();const a=createAudio();for(const t of ['light','fall'])a.stageEvent(t);assert.equal(contexts.length,0);
+ a.unlock();const ctx=contexts[0],base=ctx.nodes.length;
+ for(const t of ['light','fall'])a.stageEvent(t);assert.equal(ctx.nodes.length,base);a.scene('traverse');
+ a.stageEvent('light',-8,8);assert.equal(ctx.nodes.length,base+3);assert.equal(ctx.nodes.at(-1).pan.value,-1);
+ const light=ctx.nodes.at(-3);assert.equal(light.frequency.value,440);
+ for(let i=0;i<100;i++)a.stageEvent('light');assert.equal(ctx.nodes.length,base+3);
+ a.stageEvent('fall',8,.7);assert.equal(ctx.nodes.length,base+6);assert.equal(ctx.nodes.at(-1).pan.value,1);
+ for(let i=0;i<100;i++)a.stageEvent('fall');assert.equal(ctx.nodes.length,base+6);
+ const fall=ctx.nodes.at(-3);light.onended();fall.onended();assert.equal(light.disconnected,true);assert.equal(fall.disconnected,true);
+ ctx.currentTime=3;a.toggleMute();a.stageEvent('light');a.stageEvent('fall');assert.equal(ctx.nodes.length,base+6);
+ a.toggleMute();ctx.state='suspended';a.stageEvent('fall');assert.equal(ctx.nodes.length,base+6);
+ ctx.state='running';a.scene('card');a.stageEvent('light');assert.equal(ctx.nodes.length,base+6);
+ a.scene('traverse');a.stageEvent('fall');assert.equal(ctx.nodes.length,base+9);
+});
