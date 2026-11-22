@@ -186,6 +186,12 @@ The same stage shape as v2 (`meta`, `createStage`, `stepStage`, `progress`, `com
 ```
 Audio uses the same optional `stageEvent(type, pan, strength)`, plus `scene('traverse')`.
 
+v3 additions (Run 02, round 4, PROPOSED):
+- `meta.scene` (optional): the audio scene id for a stage, so several traversal spaces can share one soundscape (`beam` uses `'traverse'`).
+- `meta.verse: 'unassigned'`: the convention for a stage with no passage chosen yet. The conformance test requires a non-empty string; this marks one without implying any narrative.
+- Events `light` (newly solid planks appear inside the lamp's circle, strength = lit share) and `fall` (dropped into the void; the hero respawns at the space start).
+- Cards are optional: a stage with no entry in `src/content/` starts straight after the previous one (a continuous journey).
+
 ---
 
 ## Changelog

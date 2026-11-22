@@ -85,7 +85,7 @@ export function drawStage(ctx, state, view, time) {
   }
 }
 
-function drawHero(ctx, hero, x, y, scale, time, lightNear) {
+export function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   const W = hero.w * scale;
   const H = hero.h * scale;
   const swing = hero.grounded ? Math.sin(hero.walk) : 0.6;
@@ -119,7 +119,7 @@ function drawHero(ctx, hero, x, y, scale, time, lightNear) {
   void time;
 }
 
-function hills(ctx, w, h, offset, baseFrac, fill, scale, freq, amp) {
+export function hills(ctx, w, h, offset, baseFrac, fill, scale, freq, amp) {
   ctx.fillStyle = fill;
   ctx.beginPath();
   ctx.moveTo(0, h);

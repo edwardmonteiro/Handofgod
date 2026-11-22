@@ -16,7 +16,7 @@ const params = new URLSearchParams(location.search);
 // D-14 (owner-confirmed through Instinct): the game is character traversal, so the traversal slice is the default.
 // ?slice=light keeps the archived disembodied-hand prototype playable for reference. The Firmament and Land hand stages
 // were superseded and are no longer probed, so the four optional 404s are gone.
-const SLICES = { traverse: ['traverse'], light: ['light'] };
+const SLICES = { traverse: ['traverse', 'beam'], light: ['light'] };
 const STAGE_IDS = SLICES[params.get('slice')] || SLICES.traverse;
 const CARD_MIN_S = 2.5;     // a verse card can be skipped after this long
 const CARD_AUTO_S = 9;      // ...and advances by itself after this long
@@ -74,8 +74,13 @@ async function next() {
   index = target;
   modeTime = 0;
   mode = index >= stages.length ? 'end' : 'card';
-  scene('card');
   advancing = false;
+  // Spaces without a card follow straight on, so the journey stays continuous.
+  if (mode === 'card' && !stages[index].mod.missing && !CARDS[stages[index].id]) {
+    startStage();
+    return;
+  }
+  scene('card');
 }
 
 function startStage() {
@@ -88,7 +93,7 @@ function startStage() {
   state = s.mod.logic.createStage((seed + index * 7919) >>> 0);
   resolvedFor = 0;
   mode = 'play';
-  scene(s.id);
+  scene((s.mod.logic.meta && s.mod.logic.meta.scene) || s.id);
 }
 
 function resize() {

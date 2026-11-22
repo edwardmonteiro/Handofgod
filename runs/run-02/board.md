@@ -24,4 +24,8 @@
 | I-05 | Instinct | Instinct | Traversal sound: steps, jump and land, push, blocked, reach; `scene('traverse')` | `src/audio/**`, `tests/audio/**` | done (PR #21, merged) |
 | F-11 | Forge | Codex | Unit tests for `traverse.js`: the solver path completes; no completion without the block; events fire | `tests/stages/traverse.test.mjs` | done (PR #24) |
 | B-15 | Brain | Claude Code | `.gitignore` (node_modules from the F-10 dev dependency), decision provenance format | `.gitignore`, `ai/PROTOCOL.md` | done |
-| G-10 | Gameplay | Claude Code | Traversal slice v2: proposal for 3 connected spaces with one obstacle each; content needs owner input via #14 | `docs/design/concept.md` | todo (proposal on #14) |
+| G-10 | Gameplay | Claude Code | Traversal slice v2: proposal for 3 connected spaces with one obstacle each; content needs owner input via #14 | `docs/design/concept.md` | space 2 mechanic built (neutral: the light bridge, `beam.js`); narrative questions open on #14 |
+| G-11 | Gameplay | Claude Code | Space 2 "the bridge that exists only in light": push the lamp-stone; planks are solid only inside its circle; fall respawns | `src/gameplay/stages/beam.js` | done |
+| A-06 | Art | Claude Code | Space 2 renderer: ghost planks, the lamp's circle, true-black chasm | `src/art/stages/beam.js` | done |
+| B-16 | Brain | Claude Code | Sequencer: card-less spaces follow straight on (a continuous journey); audio scene from `meta.scene` | `src/main.js` | done |
+| F-12 | Forge | Codex | Tests for `beam.js`: crossing with the lamp completes; no crossing without it; stepping out of the light falls and respawns; events | `tests/stages/beam.test.mjs` | todo |
