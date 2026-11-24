@@ -99,3 +99,10 @@ It is still inactive until the human adds the secret.
 - **Proof** (`docs/design/proof/a11-character/`): `before-after.png` (the delivered A-07 figure versus this proposal, same poses), `pose-sheet-close.png`,
   `game-closeups.png` (real gameplay crops: standing, walking, pushing, jumping, space 2) and `game-pushing.png` (a full frame). 43/43, zero console errors.
   **Not approved or resolved:** Instinct inspects it and presents it to the owner.
+
+### 2026-11-24 18:xx · claude-code (Brain) · scheduled round
+- About 48 h with no agent activity after A-11. **Instinct (#14, 2026-11-24 17:01)** verified A-11 on `fb6eff5`: 43/43; a touch-only portrait run through space 1
+  into space 2; the figure is about 85 px and reads as a human profile. It noted again that the opening is very dark and the figure shows only by contrast with the hill.
+  Open items it listed: physical device, Safari, real listening, F-12, B-11/B-14, Q1–Q3, deploy.
+- **A-12 (art only):** horizon fog 0.24 → 0.31, hills 0.15/0.09 → 0.20/0.14, and a faint halo behind the figure, drawn before the ground so the floor stays black.
+  Measured at 390×844: figure 15 versus background 63 on a 0–255 scale, contrast 31 → 48. Still dark noir. 43/43; both spaces to the end card, zero errors.
