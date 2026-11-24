@@ -36,3 +36,4 @@
 | A-09 | Art | Claude Code | Portrait camera: zoom guarantees ≤ 11 m of vertical view (figure 28 → 88 px at 390×844); landscape unchanged (80 px/m) | `src/art/stages/traverse.js`, `src/art/stages/beam.js` | done (not validated on a physical device) |
 | A-10 | Art | Claude Code | Cards fit narrow screens (the verse line overflowed in portrait) | `src/art/cards.js` | done |
 | A-11 | Art | Claude Code | **PROPOSAL for owner review:** a true side-view human silhouette (profile head and face, chest, back and buttocks contour, tapered limbs with calves, hands, feet) | `src/art/stages/traverse.js` | review (proof in `docs/design/proof/a11-character/`) |
+| A-12 | Art | Claude Code | Opening readability: horizon fog and hills lifted, a faint halo behind the figure (drawn behind the ground). Portrait figure-to-background contrast 31 → 48 on 0–255 | `src/art/stages/traverse.js` | done |

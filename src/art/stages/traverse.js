@@ -22,8 +22,8 @@ export function drawStage(ctx, state, view, time) {
 
   // ---- Sky: layered fog, lighter toward the horizon ----------------------------------
   const sky = ctx.createLinearGradient(0, 0, 0, h);
-  sky.addColorStop(0, grey(0.07));
-  sky.addColorStop(0.62, grey(0.24));
+  sky.addColorStop(0, grey(0.08));
+  sky.addColorStop(0.62, grey(0.31));   // A-12: horizon fog lifted so the silhouette reads (Instinct, #14)
   sky.addColorStop(1, grey(0.1));
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, w, h);
@@ -41,9 +41,16 @@ export function drawStage(ctx, state, view, time) {
   ctx.fillRect(0, 0, w, h);
 
   // ---- Parallax hills (two layers of silhouette) ---------------------------------------
-  hills(ctx, w, h, camX * scale * 0.25, 0.5, grey(0.15), scale, 0.02, 3.2);
-  hills(ctx, w, h, camX * scale * 0.5, 0.6, grey(0.09), scale, 0.035, 2.2);
+  hills(ctx, w, h, camX * scale * 0.25, 0.5, grey(0.2), scale, 0.02, 3.2);
+  hills(ctx, w, h, camX * scale * 0.5, 0.6, grey(0.14), scale, 0.035, 2.2);
 
+  // A-12: a faint halo of fog light behind the figure (drawn before the ground, so it never lights the floor), so the silhouette separates from the dark hills
+  const hcx = sx(hero.x + hero.w / 2), hcy = sy(hero.y + hero.h * 0.55);
+  const halo = ctx.createRadialGradient(hcx, hcy, 0, hcx, hcy, scale * 1.4);
+  halo.addColorStop(0, grey(0.5, 0.22));
+  halo.addColorStop(1, grey(0.5, 0));
+  ctx.fillStyle = halo;
+  ctx.fillRect(hcx - scale * 1.5, hcy - scale * 1.5, scale * 3, scale * 3);
   // ---- Solid world ----------------------------------------------------------------
   ctx.fillStyle = grey(0.025);
   for (const s of level.solids) ctx.fillRect(sx(s.x), sy(s.y + s.h), s.w * scale, s.h * scale);
